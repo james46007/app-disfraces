@@ -1,0 +1,31 @@
+<app-sidebar></app-sidebar>
+
+<div class="content-container">
+
+    <div class="container-fluid">
+  
+      <!-- Main component for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <h1>{{page_title}}</h1>
+        <div class="alert alert-danger" *ngIf="status == 'error'">
+          {{message}}
+        </div>
+        <br>
+        <form #actualizarGarantiaForm="ngForm" (ngSubmit)="onSubmit(actualizarGarantiaForm)">
+          <div class="form-group">
+            <label for="name">Nombre de la garantia</label>
+            <input type="text" class="form-control" name="name" placeholder="Nombre" #name="ngModel"
+              [(ngModel)]="garantia.name" required>
+            <small *ngIf="!name.valid && name.touched" class="invalid-feedback d-block">Ingrese nombre</small>
+          </div>
+                    
+          <input type="submit" value="Actualizar" class="btn btn-primary" [disabled]="actualizarGarantiaForm.invalid">          
+        </form>
+        <br>
+        <a [routerLink]="['/garantias']" class="btn btn-secondary">
+          Volver
+        </a>
+      </div>
+  
+    </div>
+  </div>

@@ -1,0 +1,271 @@
+<app-sidebar></app-sidebar>
+
+<div class="content-container">
+
+  <div class="container-fluid">
+
+    <!-- Main component for a primary marketing message or call to action -->
+    <form class="jumbotron">
+      <h1>{{page_title}}</h1>
+
+      <!-- agregrar -->
+      <form #agregarArticuloForm="ngForm" (ngSubmit)="agregar()">
+        <div class="form-group">
+          <label for="article_id">Artículo</label>
+          <select name="article_id" #articulo="ngModel" [(ngModel)]="alquiler.article_id"
+            (click)="maximo(alquiler.article_id)" class="form-control" required>
+            <option *ngFor="let articulo of articulosDisponibles" value="{{articulo.id}}">{{articulo.name}}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="salida">Cantidad disponible {{maximoCantidad}}</label>
+          <input type="number" class="form-control" name="salida" placeholder="Cantidad" #salida="ngModel" [min]="1"
+            [max]="maximoCantidad" [(ngModel)]="alquiler.salida" required>
+          <small *ngIf="!salida.valid && salida.touched" class="invalid-feedback d-block">Ingrese cantidad</small>
+        </div>
+
+
+        <input
+          *ngIf="salida.value <= maximoCantidad && salida.value > 0 ? agregarArticuloForm.valid : agregarArticuloForm.invalid"
+          type="submit" value="Agregar" class="btn btn-primary" [disabled]="agregarArticuloForm.invalid">
+      </form>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col" class="d-none">id</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Codigo</th>
+            <th scope="col">Cantidad</th>
+            <th scope="col">Valor unitario</th>
+            <th scope="col">Valor total</th>
+            <th scope="col">Borrar</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let articulo of listaAlquiler; let i = index">
+            <th scope="row">{{i+1}}</th>
+            <td class="d-none">{{articulo.id}}</td>
+            <td>{{articulo.name}}</td>
+            <td>{{articulo.code}}</td>
+            <!-- <td>{{articulo.salida}}</td> -->
+            <!-- <td>{{articulo.sal_val_uni}}</td> -->
+            <td><input type="number" name="salida{{articulo.id}}" #sal_val_uni="ngModel" [min]="1"
+                [max]="articulo.maximo" (change)="aumentarCantidad(i,articulo.id)" [(ngModel)]="articulo.salida">
+            </td>
+            <td><input type="number" name="sal_val_uni{{articulo.id}}" #sal_val_uni="ngModel" min="1"
+                (change)="calcular(i,articulo.id)" [(ngModel)]="articulo.sal_val_uni">
+            </td>
+            <td>{{articulo.total}}</td>
+            <td>
+              <!-- Trigger the modal with a button -->
+              <button type="button" class="btn btn-info" data-toggle="modal"
+                [attr.data-target]="'#myModal'+articulo.id">Eliminar</button>
+
+              <!-- Modal -->
+              <div id="{{'myModal'+articulo.id}}" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">¿Estas seguro que quieres borrar?</h4>
+                    </div>
+                    <div class="modal-body">
+                      <p>Vas a borrar definitivamente el articulo {{articulo.name}}</p>
+                    </div>
+                    <div class="modal-footer">
+                      <div (click)="deleteArticulo(i,articulo.id)" class="btn btn-danger" data-dismiss="modal">Borrar
+                      </div>
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="form-group">
+        <label for="total">SutTotal</label>
+        <input type="number" class="form-control" name="total" value="{{subTotal}}" placeholder="Total" disabled>
+      </div>
+
+      <div class="form-group">
+        <label for="total">IVA {{setIva}}%</label>
+        <input type="number" class="form-control" name="total" value="{{iva}}" placeholder="Total" disabled>
+      </div>
+
+      <div class="form-group">
+        <label for="total">Total</label>
+        <input type="number" class="form-control" name="total" value="{{total}}" placeholder="Total" disabled>
+      </div>
+
+
+
+      <form #buscarClienteForm="ngForm" (ngSubmit)="onSubmit(buscarClienteForm)">
+        <div class="form-group">
+          <label for="identity_card">Numero cédula</label>
+          <!-- <input type="text" class="form-control" name="identity_card" placeholder="Cedula" #identity_card="ngModel"
+            [(ngModel)]="cliente.identity_card" required> -->
+          <small *ngIf="advertencia != null" class="invalid-feedback d-block">{{advertencia}}</small>
+          <input type="text" value="" class="form-control" name="cliente.identity_card"
+            [(ngModel)]="cliente.identity_card" (change)="validadorDeCedula(cliente.identity_card)" maxlength="10">
+          <small *ngIf="!validador" class="text-danger">Cédula Invalida</small>
+        </div>
+        <input type="submit" value="Buscar" class="btn btn-primary" [disabled]="buscarClienteForm.invalid">
+      </form>
+
+      <form #facturarArticulosForm="ngForm" (ngSubmit)="pagar(facturarArticulosForm)">
+        <div class="form-group">
+          <label for="name">Nombre</label>
+          <input type="text" class="form-control" name="name" placeholder="Nombre" #name="ngModel"
+            [(ngModel)]="cliente.name" required>
+          <small *ngIf="!name.valid && name.touched" class="invalid-feedback d-block">Ingrese nombre</small>
+        </div>
+
+        <div class="form-group">
+          <label for="surname">Apellido</label>
+          <input type="text" class="form-control" name="surname" placeholder="Apellido" #surname="ngModel"
+            [(ngModel)]="cliente.surname" required>
+          <small *ngIf="!surname.valid && surname.touched" class="invalid-feedback d-block">Ingrese apellido</small>
+        </div>
+
+        <div class="form-group">
+          <label for="direction">Dirección</label>
+          <input type="text" class="form-control" name="direction" placeholder="Dirección" #direction="ngModel"
+            [(ngModel)]="cliente.direction" required>
+          <small *ngIf="!direction.valid && direction.touched" class="invalid-feedback d-block">Ingrese
+            dirección</small>
+        </div>
+
+        <div class="form-group">
+          <label for="cellphone">Telefono</label>
+          <input type="number" class="form-control" name="cellphone" placeholder="Telefono" #cellphone="ngModel"
+            [(ngModel)]="cliente.cellphone" required>
+          <small *ngIf="!cellphone.valid && cellphone.touched" class="invalid-feedback d-block">Ingrese telefono</small>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" name="email" placeholder="Email" #email="ngModel"
+            [(ngModel)]="cliente.email" required>
+          <small *ngIf="!email.valid && email.touched" class="invalid-feedback d-block">Ingrese email</small>
+        </div>
+
+        <div class="form-group">
+          <label for="guarantee_id">Selecionar garantia</label>
+          <select name="guarantee_id" #garantia="ngModel" [(ngModel)]="factura.guarantee_id" class="form-control"
+            required>
+            <option *ngFor="let garantia of garantias" value="{{garantia.id}}">{{garantia.name}}</option>
+          </select>
+        </div>
+
+        <div class="form-group" *ngIf="factura.guarantee_id == 2">
+          <label for="garantia">Garantia</label>
+          <input type="text" class="form-control" name="garantia" placeholder="Garantia" #garantia="ngModel"
+            [(ngModel)]="factura.garantia" required>
+          <small *ngIf="!garantia.valid && garantia.touched" class="invalid-feedback d-block">Ingrese garantia</small>
+        </div>
+
+        <input type="submit" value="Finalizar" class="btn btn-primary" [disabled]="facturarArticulosForm.invalid">
+      </form>
+
+    </form>
+  </div>
+</div>
+
+<!-- <div class="container">
+  <div class="row" id="contenido">
+
+    <div class="col-xs-6 text-right">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h6>NIT :
+            <a href="#">N&uacute;mero de NIT</a>
+          </h6>
+          <h6>AUTORIZACI&Oacute;N :
+            <a href="#">N&uacute;mero de Aut.</a>
+          </h6>
+        </div>
+        <div class="panel-body">
+          <h6>FACTURA :
+            <a href="#">N&uacute;mero de FACTURA</a>
+          </h6>
+        </div>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h6>Ibarra, {{factura.date}}</h6>
+          </div>
+          <div class="panel-body">
+
+
+            <h6>Comprador:{{cliente.name}} {{cliente.surname}}</h6> 
+            <h6>C.I: {{cliente.identity_card}}</h6>
+            
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <pre></pre>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Codigo</th>
+          <th scope="col">Cantidad</th>
+          <th scope="col">Valor unitario</th>
+          <th scope="col">Valor total</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let articulo of listaAlquiler; let i = index">
+          <th scope="row">{{i+1}}</th>
+          <td>{{articulo.name}}</td>
+          <td>{{articulo.code}}</td>
+          <td>{{articulo.salida}}</td>
+          <td>{{articulo.sal_val_uni}}</td>
+          <td>{{articulo.total}}</td>
+          
+        </tr>
+      </tbody>
+    </table>
+
+    <pre></pre>
+
+
+    <div class="row">
+      <div class="col-xs-8">
+
+        <div class="panel panel-info" style="text-align: right;">
+          <h6> "LA ALTERACI&Oacute;N, FALSIFICACI&Oacute;N O COMERCIALIZACI&Oacute;N ILEGAL DE ESTE
+            DOCUMENTO ESTA PENADO POR LA LEY"</h6>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div> -->
+
+<!-- <div>
+  <button class="btn col col-lg-4 btn-danger btn-block ml-4" (click)="downloadPDF()">Download PDF</button>
+</div> -->

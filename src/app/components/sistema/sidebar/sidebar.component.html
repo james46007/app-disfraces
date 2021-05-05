@@ -1,0 +1,74 @@
+<div class="sidebar-container">
+  <div class="sidebar-logo">
+    {{title}}
+  </div>
+  <ul class="sidebar-navigation">
+    <li class="header">opciones</li>
+    <li *ngIf="getCajera() || getAdmin()">
+      <a [routerLink]="['/alquiler']">
+        <i class="fas fa-arrow-circle-right" aria-hidden="true"></i> Alquiler
+      </a>
+    </li>
+    <li *ngIf="getCajera() || getAdmin()">
+      <a [routerLink]="['/devolucion']">
+        <i class="fas fa-arrow-circle-right" aria-hidden="true"></i> Devoluciones
+      </a>
+    </li>
+    <li *ngIf="getMantenimiento() || getAdmin()">
+      <a [routerLink]="['/disponer']">
+        <i class="fas fa-arrow-circle-right" aria-hidden="true"></i> Disponibilidad
+      </a>
+    </li>
+    <li *ngIf="getAdmin()" class="header">Configuracion</li>
+    <li *ngIf="getAdmin()">
+      <a [routerLink]="['/categorias']">
+        <i class="fa fa-cog" aria-hidden="true"></i> Categorias
+      </a>
+    </li>
+    <li *ngIf="getAdmin()">
+      <a [routerLink]="['/articulos']">
+        <i class="fa fa-cog" aria-hidden="true"></i> Articulos
+      </a>
+    </li>
+    <li *ngIf="getAdmin()">
+      <a [routerLink]="['/disfraces']">
+        <i class="fa fa-cog" aria-hidden="true"></i> Disfraces
+      </a>
+    </li>
+    <li *ngIf="getAdmin()">
+      <a [routerLink]="['/usuarios']">
+        <i class="fa fa-cog" aria-hidden="true"></i> Usuarios
+      </a>
+    </li>
+    <!-- <li *ngIf="getAdmin()">
+      <a [routerLink]="['/roles']">
+        <i class="fa fa-cog" aria-hidden="true"></i> Roles
+      </a>
+    </li> -->
+    <li *ngIf="getAdmin()">
+      <a [routerLink]="['/garantias']">
+        <i class="fa fa-cog" aria-hidden="true"></i> Garantias
+      </a>
+    </li>
+    <li *ngIf="getAdmin()">
+      <a [routerLink]="['/inventario']">
+        <i class="fa fa-cog" aria-hidden="true"></i> Inventario
+      </a>
+    </li>
+    <li *ngIf="getAdmin()">
+      <a [routerLink]="['/iva']">
+        <i class="fa fa-cog" aria-hidden="true"></i> Iva
+      </a>
+    </li>
+    <li *ngIf="getAdmin()">
+      <a [routerLink]="['/reporte/clientes']">
+        <i class="fa fa-cog" aria-hidden="true"></i> Reporte clientes
+      </a>
+    </li>
+    <li>
+      <a [routerLink]="['/logout/1']" >
+        <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+      </a>
+    </li>
+  </ul>
+</div>

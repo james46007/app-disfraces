@@ -1,0 +1,42 @@
+<app-menu></app-menu>
+<!-- Masthead-->
+<header class="masthead bg-primary text-white text-center">
+  <div class="container d-flex align-items-center flex-column">
+    <!-- Masthead Avatar Image-->
+    <img class="masthead-avatar mb-5" src="assets/images/disfraces.png" alt="" />
+    <!-- Masthead Heading-->
+    <h1 class="masthead-heading text-uppercase mb-0">La Casa Del Disfraz</h1>
+    <!-- Icon Divider-->
+    <div class="divider-custom divider-light">
+      <div class="divider-custom-line"></div>
+      <div class="divider-custom-icon"><i class="fas fa-home"></i></div>
+      <div class="divider-custom-line"></div>
+    </div>
+    <!-- Masthead Subheading-->
+    <p class="masthead-subheading font-weight-light mb-0">El mundo y su folklor</p>
+  </div>
+</header>
+<!-- Portfolio Section-->
+<section class="page-section portfolio" id="categorias">
+  <div class="container">
+    <!-- Portfolio Section Heading-->
+    <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Categorías</h2>
+    <!-- Icon Divider-->
+    <div class="divider-custom">
+      <div class="divider-custom-line"></div>
+      <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+      <div class="divider-custom-line"></div>
+    </div>
+    <!-- Portfolio Grid Items-->
+    <div class="row justify-content-center">
+      <!-- Portfolio Item 1-->
+      <div class="col-md-6 col-lg-4 mb-5" *ngFor="let categoria of categorias; let i = index">
+        <div class="form-group">
+          <button class="btn btn-primary btn-xl" [routerLink]="['/ver/disfraces/',categoria.id]"
+            id="sendMessageButton" type="submit">{{categoria.name}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<app-footer></app-footer>

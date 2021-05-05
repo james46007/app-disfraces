@@ -1,0 +1,33 @@
+<app-sidebar></app-sidebar>
+
+<div class="content-container">
+
+    <div class="container-fluid">
+  
+      <!-- Main component for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <h1>{{page_title}}</h1>
+
+        <!-- <p *ngIf="status !='success'">Registrate en nuestra plataforma para disfrutar de nuestro servicios.</p>
+        <div class="alert alert-success" *ngIf="status == 'success'">
+          El registro se ha completado correctamente, <a [routerLink]="['/login']">inicia sesion</a>
+        </div> -->
+        <div class="alert alert-danger" *ngIf="status == 'error'">
+          {{message}}
+        </div>
+        <br>
+        <form #registerCategoriaForm="ngForm" (ngSubmit)="onSubmit(registerCategoriaForm)">
+          <div class="form-group">
+            <label for="name">Nombre de la categoria</label>
+            <input type="text" class="form-control" name="name" placeholder="Nombre" #name="ngModel"
+              [(ngModel)]="category.name" required>
+            <small *ngIf="!name.valid && name.touched" class="invalid-feedback d-block">Ingrese nombre</small>
+          </div>
+                    
+          <input type="submit" value="Registrar" class="btn btn-primary" [disabled]="registerCategoriaForm.invalid">          
+        </form>
+                
+      </div>
+  
+    </div>
+  </div>

@@ -1,0 +1,84 @@
+<app-sidebar></app-sidebar>
+
+<div class="content-container">
+
+  <div class="container-fluid">
+
+    <!-- Main component for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <h1>{{title}}</h1>
+      <br>
+      <label class="checkbox-inline">
+
+        <a [routerLink]="['/registrar']" class="btn btn-primary">
+          Registrar nuevo usuario
+        </a>
+        <hr>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col" class="d-none">id</th>
+              <th scope="col">Usuario</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">apellido</th>
+              <th scope="col">Actualizar</th>
+              <th scope="col">Borrar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let usuario of usuarios; let i = index">
+              <th scope="row">{{i+1}}</th>
+              <td class="d-none">{{usuario.id}}</td>
+              <td>{{usuario.email}}</td>
+              <td>{{usuario.name}}</td>
+              <td>{{usuario.surname}}</td>
+              <td>
+                <a class="btn btn-warning" [routerLink]="['/actualizar/',usuario.id]">Actualizar</a>
+              </td>
+              <td>                
+                <!-- Trigger the modal with a button -->
+                <button type="button" class="btn btn-info" data-toggle="modal" [attr.data-target]="'#myModal'+usuario.id">Eliminar</button>
+
+                <!-- Modal -->
+                <div id="{{'myModal'+usuario.id}}" class="modal fade" role="dialog">
+                  <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">¿Estas seguro que quieres borrar?</h4>
+                      </div>
+                      <div class="modal-body">
+                        <p>Vas a borrar definitivamente al usuario {{usuario.name}} {{usuario.surname}}</p>
+                      </div>
+                      <div class="modal-footer">
+                        <div (click)="deleteUsuario(usuario.id)" class="btn btn-danger" data-dismiss="modal">Borrar</div>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- <form>
+          <select class="form-control" (click)="getRolesUsuario()">
+            <option *ngFor="let usuario of usuarios; let i = index" >
+              {{ usuario.name }}
+            </option>
+          </select>
+          <div class="form-check" *ngFor="let rol of roles; let i = index">
+            <input type="checkbox" class="form-check-input" id="index">
+            <label class="form-check-label" for="exampleCheck1">{{rol.name}}</label>
+          </div>
+        </form> -->
+
+      </label>
+    </div>
+
+  </div>
+</div>

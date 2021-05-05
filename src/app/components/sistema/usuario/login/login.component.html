@@ -1,0 +1,42 @@
+<div class="container">
+  <div class="row text-center login-page">
+    <div class="col-md-12 login-form">
+      <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+        <div class="row">
+          <div class="col-md-12 login-form-header">
+            <div class="alert alert-danger row" *ngIf="status == 'error'">
+              {{message}}
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 login-form-header">
+            <p class="login-form-font-header">Iniciar<span>Sesion</span>
+              <p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 login-from-row">
+            <input type="email" class="form-control" name="email" placeholder="Correo electronico" #email="ngModel"
+              [(ngModel)]="user.email" required
+              pattern="[A-Za-z0-9._%+-]{3,}@[a-zA-Z]{3,}([.]{1}[a-zA-Z]{2,}|[.]{1}[a-zA-Z]{2,}[.]{1}[a-zA-Z]{2,})">
+            <small *ngIf="!email.valid && email.touched" class="invalid-feedback d-block">Correo
+              electronico no valido</small>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 login-from-row">
+            <input type="password" class="form-control" name="password" placeholder="Contraseña" #password="ngModel"
+              [(ngModel)]="user.password" required>
+            <small *ngIf="!password.valid && password.touched" class="invalid-feedback d-block">Contraseña no valida</small>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 login-from-row">
+            <button class="btn btn-info" [disabled]="loginForm.invalid">Entrar</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

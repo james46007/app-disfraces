@@ -1,0 +1,100 @@
+<app-sidebar></app-sidebar>
+
+<div class="content-container">
+
+  <div class="container-fluid">
+
+    <!-- Main component for a primary marketing message or call to action -->
+    <div class="jumbotron">
+
+      <h1>{{title}}</h1>
+      <br>
+
+      <div>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+          Crear Rol
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Registrar un nuevo rol</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <!-- empieza el cuerpo -->
+              <div class="modal-body">
+                <div class="form-group">
+                  <label for="name">Nombre</label>
+                  <input type="text" class="form-control" name="name" placeholder="Nombre" #name="ngModel"
+                    [(ngModel)]="nuevoRol" required>
+                  <small *ngIf="!name.valid && name.touched" class="invalid-feedback d-block">Ingrese nombre</small>
+                </div>
+              </div>
+              <!-- termina el cuerpo -->
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button (click)="guardarRol()" type="button" class="btn btn-primary"
+                  [disabled]="name.invalid">Guardar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Actualizar</th>
+            <th scope="col">Eliminar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let rol of roles; let i = index">
+            <th scope="row">{{i+1}}</th>
+            <td>{{rol.name}}</td>
+            <td>
+              <a class="btn btn-warning" [routerLink]="['/actualizar/rol/',rol.id]">Actualizar</a>
+            </td>
+            <td>
+              <!-- Trigger the modal with a button -->
+              <button type="button" class="btn btn-info" data-toggle="modal"
+                [attr.data-target]="'#myModal'+rol.id">Eliminar</button>
+
+              <!-- Modal -->
+              <div id="{{'myModal'+rol.id}}" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">¿Estas seguro que quieres borrar?</h4>
+                    </div>
+                    <div class="modal-body">
+                      <p>Vas a borrar definitivamente el rol {{rol.name}}</p>
+                    </div>
+                    <div class="modal-footer">
+                      <div (click)="deleteRol(rol.id)" class="btn btn-danger" data-dismiss="modal">Borrar</div>
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>

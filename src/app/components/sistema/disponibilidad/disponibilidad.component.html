@@ -1,0 +1,44 @@
+<app-sidebar></app-sidebar>
+
+<div class="content-container">
+
+  <div class="container-fluid">
+
+    <!-- Main component for a primary marketing message or call to action -->
+    <form class="jumbotron">
+      <h1>{{page_title}}</h1>
+
+      <form #disponibilidadArticuloForm="ngForm" (ngSubmit)="habilitar(disponibilidadArticuloForm)">
+        <div class="form-group">
+          <label for="article_id">Artículo</label>
+          <select name="article_id" #article_id="ngModel" [(ngModel)]="articuloDevolver.article_id"
+            (click)="setArticulo(articuloDevolver.article_id)" class="form-control" required>
+            <option *ngFor="let articulo of articulosDevueltos" value="{{articulo.article_id}}">{{articulo.name}}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="entrada">Cantidad devueltos {{articuloDevolver.maximo}}</label>
+          <input type="number" class="form-control" name="entrada" placeholder="Cantidad" #entrada="ngModel" [min]="1"
+            [max]="articuloDevolver.maximo" [(ngModel)]="articuloDevolver.entrada" required>
+          <small *ngIf="!entrada.valid && entrada.touched" class="invalid-feedback d-block">Ingrese cantidad</small>
+        </div>
+
+
+        <input type="submit" value="Disponibles" class="btn btn-primary"
+          [disabled]="disponibilidadArticuloForm.invalid || articuloDevolver.entrada > articuloDevolver.maximo">
+      </form>
+      <br>
+
+
+
+      <!-- <div class="form-group">
+        <label for="total">Garantia</label>
+        <input type="text" class="form-control" name="total" value="{{garantia}}" placeholder="Garantia" disabled>
+      </div>
+      
+      <input type="button" value="Finalizar" class="btn btn-primary" (click)="devolver()"> -->
+    </form>
+  </div>
+</div>

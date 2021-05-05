@@ -1,0 +1,87 @@
+<app-sidebar></app-sidebar>
+
+<div class="content-container">
+
+  <div class="container-fluid">
+
+    <!-- Main component for a primary marketing message or call to action -->
+    <form class="jumbotron">
+      <h1>{{page_title}}</h1>
+
+      <form #buscarClienteForm="ngForm" (ngSubmit)="onSubmit(buscarClienteForm)">
+        <small *ngIf="message" class="text-danger">{{message}}</small>
+        <div class="form-group">
+          <label for="identity_card">Numero cédula</label>
+          <!-- <input type="text" class="form-control" name="identity_card" placeholder="Cedula" #identity_card="ngModel"
+            [(ngModel)]="cliente.identity_card" required>
+          <small *ngIf="!identity_card.valid && identity_card.touched" class="invalid-feedback d-block">Ingrese
+            nombre</small> -->
+          <input type="text" class="form-control" name="identity_card" [(ngModel)]="cliente.identity_card"
+            (change)="validadorDeCedula(cliente.identity_card)" maxlength="10">
+          <small *ngIf="!validador" class="text-danger">Cédula Invalida</small>
+        </div>
+        <input type="submit" value="Buscar" class="btn btn-primary" [disabled]="buscarClienteForm.invalid">
+      </form>
+      <br>
+      <form>
+        <div class="form-row">
+          <div class="col">
+            <label for="formGroupExampleInput">Nombre</label>
+            <input type="text" class="form-control" name="name" #name="ngModel" [(ngModel)]="cliente.name" disabled>
+          </div>
+          <div class="col">
+            <label for="formGroupExampleInput2">Apellido</label>
+            <input type="text" class="form-control" name="surname" #surname="ngModel" [(ngModel)]="cliente.surname" disabled>
+          </div>
+        </div>
+      </form>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col" class="d-none">id</th>
+            <th scope="col">Codigo</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Cantidad alquilada</th>
+            <th scope="col">Cantidad devuelta</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let articulo of listaAlquiler; let i = index">
+            <th scope="row">{{i+1}}</th>
+            <td class="d-none">{{articulo.id}}</td>
+            <td>{{articulo.code}}</td>
+            <td>{{articulo.articulo}}</td>
+            <td>{{articulo.quantity}}</td>
+            <td>
+              <input type="number" name="salida{{articulo.id}}" #salida="ngModel" [min]="0" [max]="articulo.quantity"
+                [(ngModel)]="articulo.entrada" (click)="devolverArticulo(i,articulo.id)">
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="form-group">
+        <label for="total">Garantia</label>
+        <input type="text" class="form-control" name="garantia" value="{{garantia}}" placeholder="Garantia" disabled>
+      </div>
+      <div class="form-group">
+        <label for="total">Subtotal</label>
+        <input type="text" class="form-control" name="subTotal" value="{{factura.subtotal}}" placeholder="Subtotal" disabled>
+      </div>
+      <div class="form-group">
+        <label for="total">Iva {{setIva}}%</label>
+        <input type="text" class="form-control" name="iva" value="{{factura.iva}}" placeholder="Iva" disabled>
+      </div>
+      <div class="form-group">
+        <label for="total">Total</label>
+        <input type="text" class="form-control" name="total" value="{{factura.total}}" placeholder="Total" disabled>
+      </div>
+      
+      <input type="button" value="Finalizar" class="btn btn-primary" (click)="devolver()" *ngIf="cliente.name != null">
+    </form>
+  </div>
+</div>

@@ -1,0 +1,8 @@
+{   
+    "/apiDemo/*": {
+      "target": "https://apilayer.net/api/check?access_key=c93bb4ee5ae39a2a9058631f206b31e3&email=",
+      "secure": false,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    }
+  }
