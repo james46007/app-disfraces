@@ -1,15 +1,15 @@
 <app-sidebar></app-sidebar>
-
+<simple-notifications [options]="options"></simple-notifications>
 <div class="content-container">
 
   <div class="container-fluid">
 
+    
     <!-- Main component for a primary marketing message or call to action -->
     <div class="jumbotron">
       <h1>{{page_title}}</h1>
       <br>
-      <label class="checkbox-inline">
-
+      
         <!-- Crear nuevo producto -->
         <div>
           <!-- Button trigger modal -->
@@ -49,7 +49,7 @@
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                   <button (click)="onSubmit(registerCategoriaForm)" type="button" class="btn btn-primary"
-                    [disabled]="registerCategoriaForm.invalid" data-dismiss="modal">Guardar</button>
+                    [disabled]="registerCategoriaForm.invalid">Guardar</button>
                 </div>
               </div>
             </div>
@@ -58,12 +58,12 @@
         <!-- <a [routerLink]="['/registrar/categoria']" class="btn btn-primary">
           Registrar nuevo categoria
         </a> -->
-        <hr>
+        
+        <br>
         <table class="table">
           <thead>
             <tr>
               <th scope="col">#</th>
-              <th scope="col" class="d-none">id</th>
               <th scope="col">Nombre</th>
               <th scope="col">Actualizar</th>
               <th scope="col">Borrar</th>
@@ -92,11 +92,11 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                       </div>
                       <div class="modal-body">
-                        <p>Vas a borrar definitivamente al usuario {{categoria.name}}</p>
+                        <p>Vas a borrar definitivamente la categoria {{categoria.name}}</p>
                       </div>
                       <div class="modal-footer">
                         <div (click)="deleteCategoria(categoria.id)" class="btn btn-danger" data-dismiss="modal">Borrar</div>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                       </div>
                     </div>
 
@@ -106,7 +106,6 @@
             </tr>
           </tbody>
         </table>
-      </label>
     </div>
 
   </div>

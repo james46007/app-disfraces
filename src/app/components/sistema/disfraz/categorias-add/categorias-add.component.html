@@ -1,20 +1,28 @@
-<div class="alert alert-danger" *ngIf="status == 'error'">
-    {{message}}
+<div>
+  <!-- <simple-notifications [options]="options"></simple-notifications> -->
+  <div class="form-group">
+    <label for="category_id">Categorias</label>
+    <select
+      name="category_id"
+      #category="ngModel"
+      [(ngModel)]="categoriaID"
+      class="form-control"
+    >
+      <option
+        *ngFor="let category of categoriasTotal"
+        value="{{ category.id }}"
+      >
+        {{ category.name }}
+      </option>
+    </select>
   </div>
 
-<div class="form-group">
-    <label for="category_id">Categorias</label>
-    <select name="category_id" #category="ngModel" [(ngModel)]="categoriaID" class="form-control">
-      <option *ngFor="let category of categoriasTotal" value="{{category.id}}">{{category.name}}</option>
-    </select>
-</div>
+  <a (click)="agregarCategoria()" class="btn btn-success">Agregar</a>
 
-<a (click)="agregarCategoria()" class="btn btn-success">Agregar</a>
+  <br />
+  <br />
 
-<br>
-<br>
-
-<table class="table">
+  <table class="table" id="tabla_categorias">
     <thead>
       <tr>
         <th scope="col">#</th>
@@ -24,34 +32,61 @@
     </thead>
     <tbody>
       <tr *ngFor="let categoria of categorias; let i = index">
-        <th scope="row">{{i+1}}</th>
-        <td>{{categoria.name}}</td>
-        <td>                
-            <!-- Trigger the modal with a button -->
-            <button type="button" class="btn btn-info" data-toggle="modal" [attr.data-target]="'#myModal'+categoria.id">Eliminar</button>
+        <th scope="row">{{ i + 1 }}</th>
+        <td>{{ categoria.name }}</td>
+        <td>
+          <!-- Trigger the modal with a button -->
+          <button
+            type="button"
+            class="btn btn-info"
+            data-toggle="modal"
+            [attr.data-target]="'#myModalCategorias' + categoria.id"
+          >
+            Eliminar
+          </button>
 
-            <!-- Modal -->
-            <div id="{{'myModal'+categoria.id}}" class="modal fade" role="dialog">
-              <div class="modal-dialog">
-
-                <!-- Modal content-->
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">¿Estas seguro que quieres borrar?</h4>
-                  </div>
-                  <div class="modal-body">
-                    <p>Vas a borrar definitivamente al usuario {{categoria.name}}</p>
-                  </div>
-                  <div class="modal-footer">
-                    <div (click)="deleteCategoriaDisfraz(categoria.id)" class="btn btn-danger" data-dismiss="modal">Borrar</div>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  </div>
+          <!-- Modal -->
+          <div
+            id="{{ 'myModalCategorias' + categoria.id }}"
+            class="modal fade"
+            role="dialog"
+          >
+            <div class="modal-dialog">
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">¿Estas seguro que quieres borrar?</h4>
+                  <button type="button" class="close" data-dismiss="modal">
+                    &times;
+                  </button>
                 </div>
-
+                <div class="modal-body">
+                  <p>
+                    Vas a quitar definitivamente la categoria
+                    {{ categoria.name }}
+                  </p>
+                </div>
+                <div class="modal-footer">
+                  <div
+                    (click)="deleteCategoriaDisfraz(categoria.id)"
+                    class="btn btn-danger"
+                    data-dismiss="modal"
+                  >
+                    Borrar
+                  </div>
+                  <button
+                    type="button"
+                    class="btn btn-default"
+                    data-dismiss="modal"
+                  >
+                    Cerrar
+                  </button>
+                </div>
               </div>
             </div>
-          </td>
+          </div>
+        </td>
       </tr>
     </tbody>
   </table>
+</div>

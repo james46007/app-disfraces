@@ -1,5 +1,5 @@
 <app-sidebar></app-sidebar>
-
+<simple-notifications [options]="options"></simple-notifications>
 <div class="content-container">
 
   <div class="container-fluid">
@@ -9,7 +9,6 @@
       <h1>{{page_title}}</h1>
 
       <form #buscarClienteForm="ngForm" (ngSubmit)="onSubmit(buscarClienteForm)">
-        <small *ngIf="message" class="text-danger">{{message}}</small>
         <div class="form-group">
           <label for="identity_card">Numero cédula</label>
           <!-- <input type="text" class="form-control" name="identity_card" placeholder="Cedula" #identity_card="ngModel"
@@ -18,7 +17,7 @@
             nombre</small> -->
           <input type="text" class="form-control" name="identity_card" [(ngModel)]="cliente.identity_card"
             (change)="validadorDeCedula(cliente.identity_card)" maxlength="10">
-          <small *ngIf="!validador" class="text-danger">Cédula Invalida</small>
+          <!-- <small *ngIf="!validador" class="text-danger">Cédula Invalida</small> -->
         </div>
         <input type="submit" value="Buscar" class="btn btn-primary" [disabled]="buscarClienteForm.invalid">
       </form>

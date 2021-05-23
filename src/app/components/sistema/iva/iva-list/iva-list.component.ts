@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { NotificationsService } from 'angular2-notifications';
 import { Iva } from 'src/app/models/iva';
 import { InventarioService } from 'src/app/services/inventario.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-iva-list',
@@ -14,12 +16,23 @@ export class IvaListComponent implements OnInit {
   public newIva: Iva;
   public ivas: [];
 
+  public options = {
+    position: ['top', 'right'],
+    timeOut: 5000,
+    showProgressBar: true,
+    pauseOnHover: false,
+    clickToClose: false,
+    maxLength: 10
+  }
+
   constructor(
+    private _userService: UserService,
+    private _service: NotificationsService,
     private _inventarioService: InventarioService,
   ) {
     this.title = 'Iva';
-    this.newIva = new Iva(0,null);
-   }
+    this.newIva = new Iva(0, null);
+  }
 
   ngOnInit(): void {
     this.getIvas();
@@ -36,11 +49,20 @@ export class IvaListComponent implements OnInit {
     );
   }
 
-  guardarIva(){
-    this._inventarioService.setIva(this.newIva.iva).subscribe(
+  guardarIva() {
+    if(!Number.isInteger(this.newIva.iva)){
+      this._service.alert('Alerta', 'Ingrese un numero entero');
+      return;
+    }
+    this._inventarioService.setIva(this.newIva, this._userService.getToken()).subscribe(
       response => {
-        this.newIva = new Iva(0,null);
-        this.getIvas();
+        if (response.code == 200) {
+          this._service.success('Éxito', response.message);
+          this.newIva = new Iva(0, null);
+          this.getIvas();
+        } else {
+          this._service.alert('Alerta', response.message);
+        }
       },
       error => {
         console.log(error);
@@ -48,11 +70,16 @@ export class IvaListComponent implements OnInit {
     );
   }
 
-  activarIva(idIva){
-    this._inventarioService.setIvas(idIva).subscribe(
+  activarIva(idIva) {
+    this._inventarioService.setIvas(idIva, this._userService.getToken()).subscribe(
       response => {
         // this.ivas = response;
-        this.getIvas();
+        if(response.code == 200){
+          this.getIvas();
+          this._service.success('Éxito', response.message);
+        }else{
+          this._service.alert('Alerta', response.message);
+        }
       },
       error => {
         console.log(error);

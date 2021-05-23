@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NotificationsService } from 'angular2-notifications';
 import { Category } from 'src/app/models/category';
 import { CategoryService } from 'src/app/services/category.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-categoria-edit',
@@ -17,7 +19,18 @@ export class CategoriaEditComponent implements OnInit {
   public status;
   public page_title;
 
+  public options = {
+    position: ['top', 'right'],
+    timeOut: 5000,
+    showProgressBar: true,
+    pauseOnHover: false,
+    clickToClose: false,
+    maxLength: 10
+  }
+
   constructor(
+    private _userService: UserService,
+    private _service: NotificationsService,
     private _route: ActivatedRoute,
     private _categoriaService: CategoryService,
     private _router: Router,
@@ -37,8 +50,8 @@ export class CategoriaEditComponent implements OnInit {
     this._categoriaService.getCategoria(id).subscribe(
       response => {
         // if(response.status == 'success'){          
-          this.categoria = response.categoria[0];
-          console.log(response.categoria)
+          this.categoria = response.data;
+          // console.log(response)
         // }
       },
       error => {
@@ -48,14 +61,16 @@ export class CategoriaEditComponent implements OnInit {
   }
 
   onSubmit(form){
-    this._categoriaService.update(this.categoria).subscribe(
+    let token = this._userService.getToken();
+    this._categoriaService.update(this.categoria, token).subscribe(
       response => {
-        console.log(response)
-        if(response.status == 'success'){
+        // console.log(response)
+        if(response.code == 200){
+          this._service.success('Éxito', response.message);     
           this._router.navigate(['categorias']);
         }else{
-          this.message = response.message;
-          this.status = 'error';
+          // this.message = response.message;
+          this._service.alert('Alerta', response.message);          
         }
       },
       error => {

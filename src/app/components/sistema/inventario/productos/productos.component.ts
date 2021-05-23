@@ -6,6 +6,7 @@ import { DisfrazService } from 'src/app/services/disfraz.service';
 import { InventarioService } from 'src/app/services/inventario.service';
 import { Subject } from 'rxjs';
 // import * as moment from 'moment';
+import { NotificationsService } from 'angular2-notifications';
 
 @Component({
   selector: 'app-productos',
@@ -26,7 +27,17 @@ export class ProductosComponent implements AfterViewInit, OnDestroy, OnInit {
   public disfraces: [];
   public inventario: [];
 
+  public options = {
+    position: ['top', 'right'],
+    timeOut: 5000,
+    showProgressBar: true,
+    pauseOnHover: false,
+    clickToClose: false,
+    maxLength: 10
+  }
+
   constructor(
+    private _service: NotificationsService,
     private _disfrazService: DisfrazService,
     private _articuloService: ArticuloService,
     private _inventarioService: InventarioService,
@@ -67,11 +78,8 @@ export class ProductosComponent implements AfterViewInit, OnDestroy, OnInit {
 
   getArticulos(){
     this._articuloService.getArticulos().subscribe(
-      response => {
-        // if(response.status == 'success'){          
+      response => {       
           this.articulos = response;
-          
-        // }
       },
       error => {
         console.log(error);
@@ -99,7 +107,7 @@ export class ProductosComponent implements AfterViewInit, OnDestroy, OnInit {
       response => {    
           this.getMomvimientoInventario();
           form.resetForm();
-          
+          this._service.success('Exito', response.message);
       },
       error => {
         console.log(error);

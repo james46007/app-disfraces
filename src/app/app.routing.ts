@@ -39,6 +39,8 @@ import { ReporteClientesComponent } from './components/sistema/reporte-clientes/
 import { IvaListComponent } from './components/sistema/iva/iva-list/iva-list.component';
 import { NosotrosComponent } from './components/web/nosotros/nosotros.component';
 import { ContactoComponent } from './components/web/contacto/contacto.component';
+import { ClientesComponent } from './components/sistema/cliente/clientes/clientes.component';
+import { ClienteEditComponent } from './components/sistema/cliente/cliente-edit/cliente-edit.component';
 
 
 //definir las rutas
@@ -82,6 +84,10 @@ const appRoutes: Routes = [
     {path: 'disponer', component: DisponibilidadComponent, canActivate: [IdentityGuard,MantenimientoGuard] },
     //Iva
     {path: 'iva', component: IvaListComponent, canActivate: [IdentityGuard,AdminGuard] },
+    
+    //CLIENTES
+    {path: 'clientes', component: ClientesComponent, canActivate: [IdentityGuard,CajeraGuard] },
+    {path: 'actualizar/cliente/:id', component: ClienteEditComponent, canActivate: [IdentityGuard,CajeraGuard] },
     
     // web disfraces
     {path: 'ver/disfraces/:categoriaId', component: DisfracesListComponent },

@@ -18,10 +18,10 @@ export class DisfrazService {
     this.url = global.url;
   }
 
-  register(disfraz): Observable<any>{
+  register(disfraz, token): Observable<any>{
     let json = JSON.stringify(disfraz);
     let params = 'json=' + json;
-    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded').set('Authorization', token);
     return this._http.post(this.url + 'register/disfraz',params,{headers: headers});
   }
 
@@ -30,15 +30,15 @@ export class DisfrazService {
     return this._http.get(this.url + 'disfraces',{headers: headers});
   }
 
-  deleteDisfraz(id){
-    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  deleteDisfraz(id, token): Observable<any>{
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded').set('Authorization', token);
     return this._http.delete(this.url + 'borrar/disfraz/' + id,{headers: headers});
   }
 
-  update(disfraz): Observable<any> {        
+  update(disfraz,token): Observable<any> {        
     let json = JSON.stringify(disfraz);
     let params = 'json=' + json;
-    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded').set('Authorization', token);
     return this._http.put(this.url + 'actulizar/disfraz', params, { headers: headers });
   }
 
@@ -73,7 +73,7 @@ export class DisfrazService {
     return this._http.post(this.url + 'agregar/categoria/disfraz/'+ disfrazId + '/'+ categoriaId,{headers: headers});
   }
 
-  deleteCategoriaDisfraz(disfrazId,categoriaId){
+  deleteCategoriaDisfraz(disfrazId,categoriaId):Observable<any>{
     let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this._http.delete(this.url + 'quitar/categoria/disfraz/' + disfrazId + '/'+ categoriaId,{headers: headers});
   }
@@ -95,16 +95,16 @@ export class DisfrazService {
     return this._http.get(this.url + 'articulos/disfraz/' + id,{headers: headers});
   }
 
-  addArticulo(disfrazId,categoriaId): Observable<any>{
+  addArticulo(disfrazId,articuloId): Observable<any>{
     // let json = JSON.stringify(categoria);
     // let params = 'json=' + json;
     let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    return this._http.post(this.url + 'agregar/articulo/disfraz/'+ disfrazId + '/'+ categoriaId,{headers: headers});
+    return this._http.post(this.url + 'agregar/articulo/disfraz/'+ disfrazId + '/'+ articuloId,{headers: headers});
   }
 
-  deleteArticuloDisfraz(disfrazId,categoriaId){
+  deleteArticuloDisfraz(disfrazId,articuloId): Observable<any>{
     let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    return this._http.delete(this.url + 'quitar/articulo/disfraz/' + disfrazId + '/'+ categoriaId,{headers: headers});
+    return this._http.delete(this.url + 'quitar/articulo/disfraz/' + disfrazId + '/'+ articuloId,{headers: headers});
   }
 
 }

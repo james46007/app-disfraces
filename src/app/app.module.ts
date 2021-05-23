@@ -6,6 +6,8 @@ import { appRoutingProviders, routing } from './app.routing';
 import { AngularFileUploaderModule } from "angular-file-uploader";
 import { DataTablesModule } from 'angular-datatables';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { SimpleNotificationsModule } from 'angular2-notifications';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/sistema/usuario/login/login.component';
@@ -53,6 +55,8 @@ import { ContactoComponent } from './components/web/contacto/contacto.component'
 import { ActualizarComponent } from './components/sistema/garantia/actualizar/actualizar.component';
 import { ReporteClientesComponent } from './components/sistema/reporte-clientes/reporte-clientes.component';
 import { IvaListComponent } from './components/sistema/iva/iva-list/iva-list.component';
+import { ClientesComponent } from './components/sistema/cliente/clientes/clientes.component';
+import { ClienteEditComponent } from './components/sistema/cliente/cliente-edit/cliente-edit.component';
 
 @NgModule({
   declarations: [
@@ -94,7 +98,9 @@ import { IvaListComponent } from './components/sistema/iva/iva-list/iva-list.com
     ContactoComponent,
     ActualizarComponent,
     ReporteClientesComponent,
-    IvaListComponent
+    IvaListComponent,
+    ClientesComponent,
+    ClienteEditComponent
   ],
   imports: [
     BrowserModule,
@@ -102,7 +108,9 @@ import { IvaListComponent } from './components/sistema/iva/iva-list/iva-list.com
     FormsModule,
     HttpClientModule,
     AngularFileUploaderModule,
-    DataTablesModule
+    DataTablesModule,
+    BrowserAnimationsModule,
+    SimpleNotificationsModule.forRoot()
   ],
   providers: [
     appRoutingProviders,

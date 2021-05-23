@@ -1,0 +1,148 @@
+<app-sidebar></app-sidebar>
+<simple-notifications [options]="options"></simple-notifications>
+<div class="content-container">
+
+  <div class="container-fluid">
+
+    
+    <!-- Main component for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <h1>{{page_title}}</h1>
+      <br>
+      
+        <!-- Crear nuevo producto -->
+        <div>
+          <!-- Button trigger modal -->
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#crearCliente">
+            Registrar nuevo cliente
+          </button>
+
+          <!-- Modal -->
+          <div class="modal fade" id="crearCliente" tabindex="-1" role="dialog" aria-labelledby="crearProductoLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="crearProductoLabel">Registrar nuevo cliente</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <!-- empieza el cuerpo -->
+                <div class="modal-body">
+                  <form #registerCategoriaForm="ngForm" (ngSubmit)="onSubmit(registerCategoriaForm)">
+                    <div class="form-group">
+                      <label for="name">Nombre</label>
+                      <input type="text" class="form-control" name="name" placeholder="Nombre" #name="ngModel"
+                        [(ngModel)]="client.name" maxlength="50" required>
+                      <small *ngIf="!name.valid && name.touched" class="invalid-feedback d-block">Ingrese nombre</small>
+                    </div>
+                    <div class="form-group">
+                      <label for="surname">Apellido</label>
+                      <input type="text" class="form-control" name="surname" placeholder="Apellido" #surname="ngModel"
+                        [(ngModel)]="client.surname" maxlength="50" required>
+                      <small *ngIf="!surname.valid && surname.touched" class="invalid-feedback d-block">Ingrese apellido</small>
+                    </div>
+                    <div class="form-group">
+                      <label for="identity_card">Cedula</label>
+                      <input type="text" class="form-control" name="identity_card" placeholder="Cedula" #identity_card="ngModel"
+                        [(ngModel)]="client.identity_card" maxlength="10" required>
+                      <small *ngIf="!identity_card.valid && identity_card.touched" class="invalid-feedback d-block">Ingrese cedula</small>
+                    </div>
+                    <div class="form-group">
+                      <label for="direction">Dirección</label>
+                      <input type="text" class="form-control" name="direction" placeholder="Dirección" #direction="ngModel"
+                        [(ngModel)]="client.direction" maxlength="150" required>
+                      <small *ngIf="!direction.valid && direction.touched" class="invalid-feedback d-block">Ingrese dirección</small>
+                    </div>
+                    <div class="form-group">
+                      <label for="cellphone">Telefono</label>
+                      <input type="text" class="form-control" name="cellphone" placeholder="Telefono" #cellphone="ngModel"
+                        [(ngModel)]="client.cellphone" maxlength="10" required>
+                      <small *ngIf="!cellphone.valid && cellphone.touched" class="invalid-feedback d-block">Ingrese telefono</small>
+                    </div>
+                    <div class="form-group">
+                      <label for="email">Correo electronico</label>
+                      <input type="text" class="form-control" name="email" placeholder="Correo electronico" #email="ngModel"
+                        [(ngModel)]="client.email" required>
+                      <small *ngIf="!email.valid && email.touched" class="invalid-feedback d-block">Ingrese correo electronico</small>
+                    </div>
+                              
+                    <!-- <input type="submit" value="Registrar" class="btn btn-primary" [disabled]="registerCategoriaForm.invalid">           -->
+                  </form>
+                </div>
+                <!-- termina el cuerpo -->
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                  <button (click)="onSubmit(registerCategoriaForm)" type="button" class="btn btn-primary"
+                    [disabled]="registerCategoriaForm.invalid">Guardar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <a [routerLink]="['/registrar/categoria']" class="btn btn-primary">
+          Registrar nuevo categoria
+        </a> -->
+        
+        <br>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Apellido</th>
+              <th scope="col">Cedula</th>
+              <th scope="col">Dirección</th>
+              <th scope="col">Telefono</th>
+              <th scope="col">Correo</th>
+              <th scope="col">Actualizar</th>
+              <th scope="col">Borrar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let cliente of clientes; let i = index">
+              <th scope="row">{{i+1}}</th>
+              <td class="d-none">{{cliente.id}}</td>
+              <td>{{cliente.name}}</td>
+              <td>{{cliente.surname}}</td>
+              <td>{{cliente.identity_card}}</td>
+              <td>{{cliente.direction}}</td>
+              <td>{{cliente.cellphone}}</td>
+              <td>{{cliente.email}}</td>
+              <td>
+                <a class="btn btn-warning" [routerLink]="['/actualizar/cliente/',cliente.id]">Actualizar</a>
+              </td>
+              <td>                
+                <!-- Trigger the modal with a button -->
+                <button type="button" class="btn btn-info" data-toggle="modal" [attr.data-target]="'#myModal'+cliente.id">Eliminar</button>
+
+                <!-- Modal -->
+                <div id="{{'myModal'+cliente.id}}" class="modal fade" role="dialog">
+                  <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h4 class="modal-title">¿Estas seguro que quieres borrar?</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      </div>
+                      <div class="modal-body">
+                        <p>Vas a borrar definitivamente el cliente {{cliente.name}}</p>
+                      </div>
+                      <div class="modal-footer">
+                        <div (click)="deleteCliente(cliente.id)" class="btn btn-danger" data-dismiss="modal">Borrar</div>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+
+  </div>
+</div>

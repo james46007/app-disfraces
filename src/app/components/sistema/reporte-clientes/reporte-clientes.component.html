@@ -1,5 +1,5 @@
 <app-sidebar></app-sidebar>
-
+<simple-notifications [options]="options"></simple-notifications>
 <div class="content-container">
 
   <div class="container-fluid">
@@ -7,20 +7,19 @@
     <!-- Main component for a primary marketing message or call to action -->
     <div class="jumbotron">
       <h1>{{page_title}}</h1>
-      <div class="alert alert-danger" *ngIf="status == 'error'">
-        {{message}}
-      </div>
       <br>
       <form #buscarClientesReporte="ngForm" (ngSubmit)="onSubmit(buscarClientesReporte)">
-        <div class="form-group">
-          <label for="name">Fecha desde:</label>
-          <input type="date" class="form-control" value="{{desde}}" name="desde" [(ngModel)]="desde" required>
+        <div class="row">
+          <div class="col-6">
+            <label for="name">Fecha desde:</label>
+            <input type="date" class="form-control" value="{{desde}}" name="desde" [(ngModel)]="desde" required>
+          </div>
+          <div class="col-6">
+            <label for="code">Fecha hasta:</label>
+            <input type="date" class="form-control" min="{{desde}}" name="hasta" [(ngModel)]="hasta" required>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="code">Fecha hasta:</label>
-          <input type="date" class="form-control" min="{{desde}}" name="hasta" [(ngModel)]="hasta" required>
-        </div>
-
+        <br>
         <input type="submit" value="Buscar" class="btn btn-primary" [disabled]="buscarClientesReporte.invalid">
       </form>
       <br>

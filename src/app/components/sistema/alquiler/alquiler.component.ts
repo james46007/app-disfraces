@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
 // ****************
 import * as jsPDF from 'jspdf';
 import * as html2canvas from 'html2canvas';
+import { NotificationsService } from 'angular2-notifications';
+import { UserService } from 'src/app/services/user.service';
 
 
 @Component({
@@ -34,10 +36,19 @@ export class AlquilerComponent implements OnInit {
   public setIva;
   public factura: Factura;
   public garantias: [];
-  public advertencia;
 
+  public options = {
+    position: ['top', 'right'],
+    timeOut: 5000,
+    showProgressBar: true,
+    pauseOnHover: false,
+    clickToClose: false,
+    maxLength: 10
+  }
 
   constructor(
+    private _userService: UserService,
+    private _service: NotificationsService,
     private _clienteService: ClienteService,
     private _inventarioService: InventarioService,
     private _router: Router,
@@ -57,7 +68,7 @@ export class AlquilerComponent implements OnInit {
   getIva() {
     this._inventarioService.getIva().subscribe(
       response => {
-        this.iva = response.iva;
+        this.iva = response.data;
         this.setIva = Math.round(this.iva * 100);
       },
       error => {
@@ -79,24 +90,32 @@ export class AlquilerComponent implements OnInit {
   }
 
   onSubmit(form) {
-    this._clienteService.buscarCliente(this.cliente.identity_card).subscribe(
-      response => {
-        if (response.status == 'warning') {
-          this.advertencia = response.message;
-          let cedula = this.cliente.identity_card
-          this.cliente = new Cliente(null, '', '', cedula, '', '', '');
-        } else if (response.status == 'registrar') {
-          this.advertencia = response.message;
-          let cedula = this.cliente.identity_card
-          this.cliente = new Cliente(null, '', '', cedula, '', '', '');
-        } else {
-          this.cliente = response.cliente;
+    if(this.validador){
+      this._clienteService.buscarCliente(this.cliente.identity_card).subscribe(
+        response => {
+          if (response.status == 'warning') {
+            // this.advertencia = response.message;
+            this._service.alert('Alerta', response.message);
+            let cedula = this.cliente.identity_card
+            this.cliente = new Cliente(null, '', '', cedula, '', '', '');
+          } else if (response.status == 'registrar') {
+            // this.advertencia = response.message;
+            this._service.alert('Alerta', response.message);
+            let cedula = this.cliente.identity_card
+            this.cliente = new Cliente(null, '', '', cedula, '', '', '');
+          } else {
+            this._service.success('Exito', response.message);
+            this.cliente = response.cliente;
+          }
+        },
+        error => {
+          console.log(error);
         }
-      },
-      error => {
-        console.log(error);
-      }
-    );
+      );
+    }else{
+      let cedula = this.cliente.identity_card
+      this.cliente = new Cliente(null, '', '', cedula, '', '', '');
+    }
   }
 
   deleteArticulo(id, articuloId) {
@@ -117,12 +136,17 @@ export class AlquilerComponent implements OnInit {
     //   }      
     // }
     // Agregar articulos
-    this.alquiler.total = this.alquiler.salida * this.alquiler.sal_val_uni;
-    this.subTotal += this.alquiler.total;
-    this.listaAlquiler.push(this.alquiler);
-    this.alquiler = { id: this.listaAlquiler.length, article_id: null, name: null, code: null, date: null, description: 'ALQUILER', estado: 1, sal_val_uni: null, salida: null, total: null, maximo: null };
-    this.maximoCantidad = null;
-    this.total = (this.subTotal * this.iva) + this.subTotal;
+    let encontrado = this.listaAlquiler.find(disfraz => disfraz.article_id == this.alquiler.article_id)
+    if(encontrado === undefined){
+      this.alquiler.total = this.alquiler.salida * this.alquiler.sal_val_uni;
+      this.subTotal += this.alquiler.total;
+      this.listaAlquiler.push(this.alquiler);
+      this.alquiler = { id: this.listaAlquiler.length, article_id: null, name: null, code: null, date: null, description: 'ALQUILER', estado: 1, sal_val_uni: null, salida: null, total: null, maximo: null };
+      this.maximoCantidad = null;
+      this.total = (this.subTotal * this.iva) + this.subTotal;
+    }else{
+      this._service.alert('Alerta','Ya esta agregado el articulo a la lista.');
+    }
 
   }
 
@@ -199,7 +223,7 @@ export class AlquilerComponent implements OnInit {
     // console.log(this.factura)
 
     if (this.factura.customer_id == null) {
-      this._clienteService.register(this.cliente).subscribe(
+      this._clienteService.register(this.cliente, this._userService.getToken()).subscribe(
         response => {
           this.factura.customer_id = response.cliente.id;
           this._inventarioService.registrarFactura(this.factura).subscribe(
@@ -294,6 +318,9 @@ export class AlquilerComponent implements OnInit {
       cedulaCorrecta = false;
     }
     this.validador = cedulaCorrecta;
+    if (!cedulaCorrecta) {
+      this._service.alert('Alerta', 'Cedula incorrecta');
+    }
 
   }
 
@@ -302,7 +329,6 @@ export class AlquilerComponent implements OnInit {
     this.alquiler = new Alquiler(null, null, null, null, null, 'ALQUILER', null, null, null, 1, null);
     this.factura = new Factura(null, null, null, null, null, null, null, null, null, 1);
     this.listaAlquiler = [];
-    this.advertencia = null;
   }
 
   // verificar despues

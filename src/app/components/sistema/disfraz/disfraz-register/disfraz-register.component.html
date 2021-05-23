@@ -1,5 +1,5 @@
 <app-sidebar></app-sidebar>
-
+<simple-notifications [options]="options"></simple-notifications>
 <div class="content-container">
 
     <div class="container-fluid">
@@ -24,24 +24,26 @@
             <small *ngIf="!name.valid && name.touched" class="invalid-feedback d-block">Ingrese nombre</small>
           </div>
 
-          <div class="form-group">
-            <label for="name">Foto del disfraz</label>
-            <div *ngIf="disfraz && disfraz.photo">
-              <img src="{{url + 'disfraz/foto/' + disfraz.photo}}" class="avatar_edit"/><p>{{disfraz.photo}}</p>
+          <div class="row">
+            <div class="col-6">
+              <label for="name">Foto del disfraz</label>
+              <div *ngIf="disfraz && disfraz.photo">
+                <img src="{{url + 'disfraz/foto/' + disfraz.photo}}" class="avatar_edit"/><p>{{disfraz.photo}}</p>
+              </div>
+    
+              <angular-file-uploader [config]="afuConfig" [resetUpload]=true (ApiResponse)="avatarUpload($event)">
+              </angular-file-uploader>
             </div>
-  
-            <angular-file-uploader [config]="afuConfig" [resetUpload]=true (ApiResponse)="avatarUpload($event)">
-            </angular-file-uploader>
-          </div>
-          
-          <div class="form-group">
-            <label for="name">Foto del disfraz probador</label>
-            <div *ngIf="disfraz && disfraz.photoCostume">
-              <img src="{{url + 'disfraz/foto/' + disfraz.photoCostume}}" class="avatar_edit"/><p>{{disfraz.photoCostume}}</p>
+            
+            <div class="col-6">
+              <label for="name">Foto del disfraz probador</label>
+              <div *ngIf="disfraz && disfraz.photoCostume">
+                <img src="{{url + 'disfraz/foto/' + disfraz.photoCostume}}" class="avatar_edit"/><p>{{disfraz.photoCostume}}</p>
+              </div>
+    
+              <angular-file-uploader [config]="afuConfig" [resetUpload]=true (ApiResponse)="fotoProbador($event)">
+              </angular-file-uploader>
             </div>
-  
-            <angular-file-uploader [config]="afuConfig" [resetUpload]=true (ApiResponse)="fotoProbador($event)">
-            </angular-file-uploader>
           </div>
 
           <br>

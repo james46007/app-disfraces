@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NotificationsService } from 'angular2-notifications';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -13,8 +14,18 @@ export class UsuariosComponent implements OnInit {
   public usuarios;
   public roles;
 
+  public options = {
+    position: ['top', 'right'],
+    timeOut: 5000,
+    showProgressBar: true,
+    pauseOnHover: false,
+    clickToClose: false,
+    maxLength: 10
+  }
+
   constructor(
     private _userService: UserService,
+    private _service: NotificationsService,
   ) { 
     this.title = 'Usuarios';
   }
@@ -64,12 +75,12 @@ export class UsuariosComponent implements OnInit {
   }
 
   deleteUsuario(id){
-    console.log(id);
     this._userService.deleteUsuario(id).subscribe(
       response => {
-        // this.roles = response;
-        this.getUsuarios();
-        console.log(response);
+        if(response.code){
+          this.getUsuarios();
+          this._service.success('Exito', response.message);
+        }
       },
       error => {
         console.log(error);

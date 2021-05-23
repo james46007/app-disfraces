@@ -1,5 +1,5 @@
 <app-sidebar></app-sidebar>
-
+<simple-notifications [options]="options"></simple-notifications>
 <div class="content-container">
 
   <div class="container-fluid">
@@ -72,19 +72,18 @@
                   <!-- Modal content-->
                   <div class="modal-content">
                     <div class="modal-header">
+                      <h4 class="modal-title">¿Estas seguro de quitar el articulo de la lista?</h4>
                       <button type="button" class="close" data-dismiss="modal">&times;</button>
-                      <h4 class="modal-title">¿Estas seguro que quieres borrar?</h4>
                     </div>
                     <div class="modal-body">
-                      <p>Vas a borrar definitivamente el articulo {{articulo.name}}</p>
+                      <p>Vas quitar el articulo {{articulo.name}}</p>
                     </div>
                     <div class="modal-footer">
                       <div (click)="deleteArticulo(i,articulo.id)" class="btn btn-danger" data-dismiss="modal">Borrar
                       </div>
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                     </div>
                   </div>
-
                 </div>
               </div>
             </td>
@@ -114,48 +113,52 @@
           <label for="identity_card">Numero cédula</label>
           <!-- <input type="text" class="form-control" name="identity_card" placeholder="Cedula" #identity_card="ngModel"
             [(ngModel)]="cliente.identity_card" required> -->
-          <small *ngIf="advertencia != null" class="invalid-feedback d-block">{{advertencia}}</small>
           <input type="text" value="" class="form-control" name="cliente.identity_card"
             [(ngModel)]="cliente.identity_card" (change)="validadorDeCedula(cliente.identity_card)" maxlength="10">
-          <small *ngIf="!validador" class="text-danger">Cédula Invalida</small>
+          <!-- <small *ngIf="!validador" class="text-danger">Cédula Invalida</small> -->
         </div>
         <input type="submit" value="Buscar" class="btn btn-primary" [disabled]="buscarClienteForm.invalid">
       </form>
 
       <form #facturarArticulosForm="ngForm" (ngSubmit)="pagar(facturarArticulosForm)">
-        <div class="form-group">
-          <label for="name">Nombre</label>
-          <input type="text" class="form-control" name="name" placeholder="Nombre" #name="ngModel"
-            [(ngModel)]="cliente.name" required>
-          <small *ngIf="!name.valid && name.touched" class="invalid-feedback d-block">Ingrese nombre</small>
+        <div class="row">
+          <div class="col-6">
+            <label for="name">Nombre</label>
+            <input type="text" class="form-control" name="name" placeholder="Nombre" #name="ngModel"
+              [(ngModel)]="cliente.name" pattern="[a-zA-Z ]{2,254}" required>
+            <small *ngIf="!name.valid && name.touched" class="invalid-feedback d-block">Ingrese nombre</small>
+          </div>
+  
+          <div class="col-6">
+            <label for="surname">Apellido</label>
+            <input type="text" class="form-control" name="surname" placeholder="Apellido" #surname="ngModel"
+              [(ngModel)]="cliente.surname" pattern="[a-zA-Z ]{2,254}" required>
+            <small *ngIf="!surname.valid && surname.touched" class="invalid-feedback d-block">Ingrese apellido</small>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label for="surname">Apellido</label>
-          <input type="text" class="form-control" name="surname" placeholder="Apellido" #surname="ngModel"
-            [(ngModel)]="cliente.surname" required>
-          <small *ngIf="!surname.valid && surname.touched" class="invalid-feedback d-block">Ingrese apellido</small>
-        </div>
-
-        <div class="form-group">
-          <label for="direction">Dirección</label>
-          <input type="text" class="form-control" name="direction" placeholder="Dirección" #direction="ngModel"
-            [(ngModel)]="cliente.direction" required>
-          <small *ngIf="!direction.valid && direction.touched" class="invalid-feedback d-block">Ingrese
-            dirección</small>
-        </div>
-
-        <div class="form-group">
-          <label for="cellphone">Telefono</label>
-          <input type="number" class="form-control" name="cellphone" placeholder="Telefono" #cellphone="ngModel"
-            [(ngModel)]="cliente.cellphone" required>
-          <small *ngIf="!cellphone.valid && cellphone.touched" class="invalid-feedback d-block">Ingrese telefono</small>
+        <div class="row">
+          <div class="col-6">
+            <label for="direction">Dirección</label>
+            <input type="text" class="form-control" name="direction" placeholder="Dirección" #direction="ngModel"
+              [(ngModel)]="cliente.direction" required>
+            <small *ngIf="!direction.valid && direction.touched" class="invalid-feedback d-block">Ingrese
+              dirección</small>
+          </div>
+  
+          <div class="col-6">
+            <label for="cellphone">Telefono</label>
+            <input type="number" class="form-control" name="cellphone" placeholder="Telefono" #cellphone="ngModel"
+              [(ngModel)]="cliente.cellphone" required>
+            <small *ngIf="!cellphone.valid && cellphone.touched" class="invalid-feedback d-block">Ingrese telefono</small>
+          </div>
         </div>
 
         <div class="form-group">
           <label for="email">Email</label>
           <input type="email" class="form-control" name="email" placeholder="Email" #email="ngModel"
-            [(ngModel)]="cliente.email" required>
+            [(ngModel)]="cliente.email" 
+            pattern="[A-Za-z0-9._%+-]{3,}@[a-zA-Z]{3,}([.]{1}[a-zA-Z]{2,}|[.]{1}[a-zA-Z]{2,}[.]{1}[a-zA-Z]{2,})" required>
           <small *ngIf="!email.valid && email.touched" class="invalid-feedback d-block">Ingrese email</small>
         </div>
 

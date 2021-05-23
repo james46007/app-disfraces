@@ -1,58 +1,91 @@
 <app-sidebar></app-sidebar>
-
+<simple-notifications [options]="options"></simple-notifications>
 <div class="content-container">
+  <div class="container-fluid">
+    <!-- Main component for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <h1>{{ page_title }}</h1>
 
-    <div class="container-fluid">
-  
-      <!-- Main component for a primary marketing message or call to action -->
-      <div class="jumbotron">
-        <h1>{{page_title}}</h1>
-
-        <!-- <p *ngIf="status !='success'">Registrate en nuestra plataforma para disfrutar de nuestro servicios.</p>
+      <!-- <p *ngIf="status !='success'">Registrate en nuestra plataforma para disfrutar de nuestro servicios.</p>
         <div class="alert alert-success" *ngIf="status == 'success'">
           El registro se ha completado correctamente, <a [routerLink]="['/login']">inicia sesion</a>
         </div> -->
-        <div class="alert alert-danger" *ngIf="status == 'error'">
-          {{message}}
+      <form
+        #registerCategoriaForm="ngForm"
+        (ngSubmit)="onSubmit(registerCategoriaForm)"
+      >
+        <div class="form-group">
+          <label for="name">Nombre del disfraz</label>
+          <input
+            type="text"
+            class="form-control"
+            name="name"
+            placeholder="Nombre"
+            #name="ngModel"
+            [(ngModel)]="disfraz.name"
+            required
+          />
+          <small
+            *ngIf="!name.valid && name.touched"
+            class="invalid-feedback d-block"
+            >Ingrese nombre</small
+          >
         </div>
-        <br>
-        <form #registerCategoriaForm="ngForm" (ngSubmit)="onSubmit(registerCategoriaForm)">
-          <div class="form-group">
-            <label for="name">Nombre del disfraz</label>
-            <input type="text" class="form-control" name="name" placeholder="Nombre" #name="ngModel"
-              [(ngModel)]="disfraz.name" required>
-            <small *ngIf="!name.valid && name.touched" class="invalid-feedback d-block">Ingrese nombre</small>
-          </div>
 
-          <div class="form-group">
+        <div class="row">
+          <div class="col-6">
             <label for="name">Foto del disfraz</label>
             <div *ngIf="disfraz && disfraz.photo">
-              <img src="{{url + 'disfraz/foto/' + disfraz.photo}}" class="avatar_edit"/><p>{{disfraz.photo}}</p>
+              <img
+                src="{{ url + 'disfraz/foto/' + disfraz.photo }}"
+                class="avatar_edit"
+              />
+              <p>{{ disfraz.photo }}</p>
             </div>
-  
-            <angular-file-uploader [config]="afuConfig" [resetUpload]=false (ApiResponse)="avatarUpload($event)">
+
+            <angular-file-uploader
+              [config]="afuConfig"
+              [resetUpload]="false"
+              (ApiResponse)="avatarUpload($event)"
+            >
             </angular-file-uploader>
           </div>
-          
-          <div class="form-group">
+
+          <div class="col-6">
             <label for="name">Foto del disfraz probador</label>
             <div *ngIf="disfraz && disfraz.photoCostume">
-              <img src="{{url + 'disfraz/foto/' + disfraz.photoCostume}}" class="avatar_edit"/><p>{{disfraz.photoCostume}}</p>
+              <img
+                src="{{ url + 'disfraz/foto/' + disfraz.photoCostume }}"
+                class="avatar_edit"
+              />
+              <p>{{ disfraz.photoCostume }}</p>
             </div>
-  
-            <angular-file-uploader [config]="afuConfig" [resetUpload]=true (ApiResponse)="fotoProbador($event)">
+
+            <angular-file-uploader
+              [config]="afuConfig"
+              [resetUpload]="true"
+              (ApiResponse)="fotoProbador($event)"
+            >
             </angular-file-uploader>
           </div>
-          <br>
-                    
-          <input type="submit" value="Actualizar" class="btn btn-primary" [disabled]="registerCategoriaForm.invalid">          
-        </form>
-
-        <app-categorias-add></app-categorias-add>
-
-        <app-articulos-add></app-articulos-add>
-                
+        </div>
+        <br />
+        <input
+          type="submit"
+          value="Actualizar"
+          class="btn btn-primary"
+          [disabled]="registerCategoriaForm.invalid"
+        />
+      </form>
+      <br>
+      <div class="row">
+        <div class="col-6">
+          <app-categorias-add></app-categorias-add>
+        </div>
+        <div class="col-6">
+          <app-articulos-add></app-articulos-add>
+        </div>
       </div>
-  
     </div>
   </div>
+</div>

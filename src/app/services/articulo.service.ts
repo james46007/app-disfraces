@@ -18,10 +18,11 @@ export class ArticuloService {
     this.url = global.url;
   }
 
-  register(category): Observable<any>{
+  register(category, token): Observable<any>{
     let json = JSON.stringify(category);
     let params = 'json=' + json;
-    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    // let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded').set('Authorization', token);
     return this._http.post(this.url + 'register/articulo',params,{headers: headers});
   }
 
@@ -30,15 +31,15 @@ export class ArticuloService {
     return this._http.get(this.url + 'articulos',{headers: headers});
   }
 
-  deleteArticulo(id){
-    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  deleteArticulo(id, token):Observable<any>{
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded').set('Authorization', token);
     return this._http.delete(this.url + 'borrar/articulo/' + id,{headers: headers});
   }
 
-  update(categoria): Observable<any> {        
+  update(categoria, token): Observable<any> {        
     let json = JSON.stringify(categoria);
     let params = 'json=' + json;
-    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded').set('Authorization', token);
     return this._http.put(this.url + 'actulizar/articulo', params, { headers: headers });
   }
 

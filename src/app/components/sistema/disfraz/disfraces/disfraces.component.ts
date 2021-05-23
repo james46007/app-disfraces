@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { NotificationsService } from 'angular2-notifications';
 import { DisfrazService } from 'src/app/services/disfraz.service';
+import { UserService } from 'src/app/services/user.service';
 import { global } from '../../../../services/global';
 
 @Component({
@@ -16,7 +18,18 @@ export class DisfracesComponent implements OnInit {
   public message: string;
   public url: string;
 
+  public options = {
+    position: ['top', 'right'],
+    timeOut: 5000,
+    showProgressBar: true,
+    pauseOnHover: false,
+    clickToClose: false,
+    maxLength: 10
+  }
+
   constructor(
+    private _userService: UserService,
+    private _service: NotificationsService,
     private _disfrazService: DisfrazService,
   ) { 
     this.page_title = 'Disfraces';
@@ -44,11 +57,15 @@ export class DisfracesComponent implements OnInit {
   }
 
   deleteDisfraz(id){
-    this._disfrazService.deleteDisfraz(id).subscribe(
+    this._disfrazService.deleteDisfraz(id, this._userService.getToken()).subscribe(
       response => {
         // this.roles = response;
-        this.getDisfraces();
-        // console.log(response);
+        if(response.code == 200){
+          this.getDisfraces();
+          this._service.success('Éxito', response.message);
+        }else{
+          this._service.alert('Alerta', response.message);
+        }
       },
       error => {
         console.log(error);

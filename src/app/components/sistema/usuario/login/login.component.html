@@ -2,13 +2,7 @@
   <div class="row text-center login-page">
     <div class="col-md-12 login-form">
       <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
-        <div class="row">
-          <div class="col-md-12 login-form-header">
-            <div class="alert alert-danger row" *ngIf="status == 'error'">
-              {{message}}
-            </div>
-          </div>
-        </div>
+        <simple-notifications [options]="options"></simple-notifications>
         <div class="row">
           <div class="col-md-12 login-form-header">
             <p class="login-form-font-header">Iniciar<span>Sesion</span>

@@ -101,18 +101,18 @@ export class InventarioService {
 
   // garantias
 
-  registrarEstado(garantia): Observable<any> {
+  registrarEstado(garantia, token): Observable<any> {
     let json = JSON.stringify(garantia);
-    console.log(json)
+    // console.log(json)
     let params = 'json=' + json;
-    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded').set('Authorization', token);
     return this._http.post(this.url + 'register/garantia', params, { headers: headers });
   }
 
-  actualizarGarantia(garantia): Observable<any> {
+  actualizarGarantia(garantia, token): Observable<any> {
     let json = JSON.stringify(garantia);
     let params = 'json=' + json;
-    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded').set('Authorization', token);
     return this._http.put(this.url + 'actualizar/garantia', params, { headers: headers });
   }
 
@@ -126,8 +126,8 @@ export class InventarioService {
     return this._http.get(this.url + 'garantias', { headers: headers });
   }
 
-  deleteEstado(id) {
-    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  deleteEstado(id, token): Observable<any> {
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded').set('Authorization', token);
     return this._http.delete(this.url + 'borrar/garantia/' + id, { headers: headers });
   }
 
@@ -213,13 +213,15 @@ export class InventarioService {
     return this._http.get(this.url + 'ivas', { headers: headers });
   }
 
-  setIva(nuevoIva): Observable<any> {
-    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    return this._http.post(this.url + 'nuevo/iva/'+nuevoIva, { headers: headers });
+  setIva(nuevoIva, token): Observable<any> {
+    let json = JSON.stringify(nuevoIva);
+    let params = 'json=' + json;
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded').set('Authorization', token);
+    return this._http.post(this.url + 'nuevo/iva', params ,{ headers: headers });
   }
 
-  setIvas(idIva): Observable<any> {
-    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  setIvas(idIva, token): Observable<any> {
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded').set('Authorization', token);
     return this._http.post(this.url + 'activar/iva/'+idIva, { headers: headers });
   }
 

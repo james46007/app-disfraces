@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/models/user';
+import { NotificationsService } from 'angular2-notifications';
 
 @Component({
   selector: 'app-register',
@@ -11,45 +12,59 @@ import { User } from 'src/app/models/user';
 export class RegisterComponent implements OnInit {
 
   public page_title: string;
-  public user: User;
-  public status: string;
-  public message: string;
+  public user: User = {
+    id: null,
+    name: null,
+    surname: null,
+    email: null,
+    password: null,
+  };
   public roles: [];
   public seleccionItems: string[];
 
+  public options = {
+    position: ['top', 'right'],
+    timeOut: 5000,
+    showProgressBar: true,
+    pauseOnHover: false,
+    clickToClose: false,
+    maxLength: 10
+  }
 
   constructor(
     private _userService: UserService,
+    private _service: NotificationsService,
   ) {
     this.page_title = 'Registrar usuario';
-    this.user = new User(1, '', '', '', '', []);
+    this.user = new User(1, '', '', '', '');
   }
 
   ngOnInit(): void {
-    this.getRoles();
+    // this.getRoles();
     this.seleccionItems = new Array<string>();
   }
 
   onSubmit(form) {
     this._userService.validarEmail(this.user.email).subscribe(
       response => {
-        if (response.mx_found && response.format_valid) {
+        if (response.mx_found && response.format_valid && response.smtp_check) {
           this.user.roles = this.seleccionItems;
+          delete this.user.roles
           this._userService.register(this.user).subscribe(
             response => {
-              console.log(response);
-              form.reset();
-              this.status = 'success';
+              if (response.code === 200) {
+                form.reset();
+                this._service.success('Exito', response.message);
+              } else {
+                this._service.alert('Exito', response.message);
+              }
             },
             error => {
-              // console.log(<any>error);
-              this.status = 'error';
-              this.message = error.error.message;
+              this._service.error('Error', error.error.message);
             }
           );
         } else {
-          this.status = 'error';
-          this.message = 'Email no existe';
+          this._service.alert('alerta', 'Email no existe');
         }
       }
     );

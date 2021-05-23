@@ -1,5 +1,5 @@
 <app-sidebar></app-sidebar>
-
+<simple-notifications [options]="options"></simple-notifications>
 <div class="content-container">
 
   <div class="container-fluid">
@@ -13,9 +13,6 @@
         <div class="alert alert-success" *ngIf="status == 'success'">
           El registro se ha completado correctamente, <a [routerLink]="['/login']">inicia sesion</a>
         </div> -->
-        <div class="alert alert-danger" *ngIf="status == 'error'">
-          {{message}}
-        </div>
         <br>
         <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
           <div class="form-group">

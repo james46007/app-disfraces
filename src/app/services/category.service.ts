@@ -18,10 +18,10 @@ export class CategoryService {
     this.url = global.url;
   }
 
-  register(category): Observable<any>{
+  register(category,token): Observable<any>{
     let json = JSON.stringify(category);
     let params = 'json=' + json;
-    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded').set('Authorization', token);
     return this._http.post(this.url + 'register/categoria',params,{headers: headers});
   }
 
@@ -30,15 +30,15 @@ export class CategoryService {
     return this._http.get(this.url + 'categorias',{headers: headers});
   }
 
-  deleteCategoria(id){
-    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  deleteCategoria(id, token):Observable<any>{
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded').set('Authorization', token);
     return this._http.delete(this.url + 'borrar/categoria/' + id,{headers: headers});
   }
 
-  update(categoria): Observable<any> {        
+  update(categoria, token): Observable<any> {        
     let json = JSON.stringify(categoria);
     let params = 'json=' + json;
-    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded').set('Authorization', token);
     return this._http.put(this.url + 'actulizar/categoria', params, { headers: headers });
   }
 

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NotificationsService } from 'angular2-notifications';
 import { element } from 'protractor';
 import { Cliente } from 'src/app/models/cliente';
 import { Devolucion } from 'src/app/models/devoluciones';
@@ -20,7 +21,15 @@ export class DevolucionComponent implements OnInit {
   public listaAlquiler: Devolucion[];
   public garantia: string;
   public cliente: Cliente;
-  public message: string;
+
+  public options = {
+    position: ['top', 'right'],
+    timeOut: 5000,
+    showProgressBar: true,
+    pauseOnHover: false,
+    clickToClose: false,
+    maxLength: 10
+  }
 
   // ****************ç
   public setIva;
@@ -32,6 +41,7 @@ export class DevolucionComponent implements OnInit {
 
 
   constructor(
+    private _service: NotificationsService,
     private _inventarioService: InventarioService,
   ) {
     this.page_title = 'Devoluciones';
@@ -88,7 +98,7 @@ export class DevolucionComponent implements OnInit {
           this._inventarioService.quitarClienteAlquiler(this.listaAlquiler[0].id).subscribe(
             response => {
               console.log(response.message)
-              this.message = response.message;
+              this._service.success('Exito', response.message);
             },
             error => {
               console.log(error);
@@ -117,7 +127,7 @@ export class DevolucionComponent implements OnInit {
       this._inventarioService.quitarClienteAlquiler(this.listaAlquiler[0].id).subscribe(
         response => {
           console.log(response.message)
-          this.message = response.message;
+          this._service.success('Exito', response.message);
         },
         error => {
           console.log(error);
@@ -132,15 +142,14 @@ export class DevolucionComponent implements OnInit {
     if (this.validador == true) {
       this._inventarioService.buscarClienteAlquilado(this.cliente.identity_card).subscribe(
         response => {
-          if (response.status == 'success') {
-            console.log(response)
+          if (response.code == 200) {
+            this._service.success('Exito', response.message);
             this.cliente = response.cliente;
             this.factura.customer_id = response.cliente.id
             this.listaAlquiler = response.alquiler;
             this.garantia = response.garantia;
           } else {
-            console.log(response.message);
-            this.message = response.message;
+            this._service.alert('Alerta', response.message);
             let cedula = this.cliente.identity_card;
             this.cliente = new Cliente(null, null, null, cedula, null, null, null);
             this.factura = new Factura(null, null, null, null, "VENTA", 0, null, null, null, 1);
@@ -155,6 +164,7 @@ export class DevolucionComponent implements OnInit {
         }
       );
     } else {
+      this._service.alert('Alerta', 'Cedula invalida');
       this.resetear();
     }
 
@@ -181,7 +191,7 @@ export class DevolucionComponent implements OnInit {
   getIva() {
     this._inventarioService.getIva().subscribe(
       response => {
-        this.factura.iva = response.iva;
+        this.factura.iva = response.data;
         this.setIva = Math.round(this.factura.iva * 100);
       },
       error => {

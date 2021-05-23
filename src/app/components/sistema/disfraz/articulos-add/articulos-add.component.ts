@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { DisfrazService } from 'src/app/services/disfraz.service';
 import { global } from 'src/app/services/global';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UserService } from 'src/app/services/user.service';
+import { NotificationsService } from 'angular2-notifications';
 
 @Component({
   selector: 'app-articulos-add',
@@ -13,20 +15,28 @@ export class ArticulosAddComponent implements OnInit {
 
   public page_title: string;
   public articulos: [];
-  public status: string;
-  public message: string;
   public url: string;
   public disfrazId;
   public articulosTotal: [];
   public articuloID;
 
+  public options = {
+    position: ['top', 'right'],
+    timeOut: 5000,
+    showProgressBar: true,
+    pauseOnHover: false,
+    clickToClose: false,
+    maxLength: 10
+  }
+
   constructor(
+    private _userService: UserService,
+    private _service: NotificationsService,
     private _disfrazService: DisfrazService,
     private _route: ActivatedRoute,
   ) { 
     this.page_title = 'Disfraz articulos';
     // this.categorias = new Category(0,'');
-    this.message = '';
     this.url = global.url;
   }
 
@@ -68,18 +78,18 @@ export class ArticulosAddComponent implements OnInit {
   }
 
   agregarCategoria(){
-    // console.log(this.categoriaID)
+    if(this.articuloID === undefined){
+      this._service.alert('Alerta', 'Seleccione una articulo.');
+      return;
+    }
     this._disfrazService.addArticulo(this.disfrazId,this.articuloID).subscribe(
       response => {
-        // console.log(response)
-        if(response.status == 'success'){          
-          // this.categoriasTotal = response;
+        if(response.code == 200){
           this.ArticuloDisfraz();
-          this.status = response.status;
+          this._service.success('Éxito', response.message);
         }else{
-          this.status = response.status;          
+          this._service.alert('Alerta', response.message);
         }
-        this.message = response.message;
       },
       error => {
         console.log(error);
@@ -88,12 +98,16 @@ export class ArticulosAddComponent implements OnInit {
     );
   }
 
-  deleteCategoriaDisfraz(id){
+  deleteArticuloDisfraz(id){
     this._disfrazService.deleteArticuloDisfraz(this.disfrazId,id).subscribe(
       response => {
         // this.roles = response;
-        this.ArticuloDisfraz();
-        // console.log(response);
+        if(response.code == 200){
+          this.ArticuloDisfraz();
+          this._service.success('Éxito', response.message);
+        }else{
+          this._service.alert('Alerta', response.message);
+        }
       },
       error => {
         console.log(error);

@@ -1,5 +1,5 @@
 <app-sidebar></app-sidebar>
-
+<simple-notifications [options]="options"></simple-notifications>
 <div class="content-container">
 
     <div class="container-fluid">
@@ -7,10 +7,6 @@
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
         <h1>{{page_title}}</h1>
-        <div class="alert alert-danger" *ngIf="status == 'error'">
-          {{message}}
-        </div>
-        <br>
         <form #actualizarGarantiaForm="ngForm" (ngSubmit)="onSubmit(actualizarGarantiaForm)">
           <div class="form-group">
             <label for="name">Nombre de la garantia</label>

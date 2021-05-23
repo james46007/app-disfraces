@@ -19,9 +19,14 @@ export class UserService {
     this.url = global.url;
   }
 
+  // validarEmail(email): Observable<any>{
+  //   let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  //   return this._http.get(`/apiDemo/${email}`);
+  // }
+  
   validarEmail(email): Observable<any>{
     let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    return this._http.get(`/apiDemo/${email}`);
+    return this._http.get(`https://apilayer.net/api/check?access_key=c93bb4ee5ae39a2a9058631f206b31e3&email=${email}`);
   }
 
   register(user): Observable<any>{
@@ -115,7 +120,7 @@ export class UserService {
     return this._http.get(this.url + 'usuarios',{headers: headers});
   }
 
-  deleteUsuario(id){
+  deleteUsuario(id):Observable<any>{
     let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this._http.delete(this.url + 'borrar/usuario/' + id,{headers: headers});
   }
@@ -137,7 +142,7 @@ export class UserService {
     return this._http.post(this.url + 'agregar/rol/usuario/'+ disfrazId + '/'+ categoriaId,{headers: headers});
   }
 
-  deleteRolUsuario(disfrazId,rolId){
+  deleteRolUsuario(disfrazId,rolId): Observable<any>{
     let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this._http.delete(this.url + 'quitar/rol/usuario/' + disfrazId + '/'+ rolId,{headers: headers});
   }

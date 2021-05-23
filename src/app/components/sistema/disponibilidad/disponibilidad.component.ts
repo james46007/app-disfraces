@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NotificationsService } from 'angular2-notifications';
 import { Disponible } from 'src/app/models/disponible';
 import { InventarioService } from 'src/app/services/inventario.service';
 
@@ -14,7 +15,17 @@ export class DisponibilidadComponent implements OnInit {
   public articulosDevueltos: [];
   public articuloDevolver: Disponible;
 
+  public options = {
+    position: ['top', 'right'],
+    timeOut: 5000,
+    showProgressBar: true,
+    pauseOnHover: false,
+    clickToClose: false,
+    maxLength: 10
+  }
+
   constructor(
+    private _service: NotificationsService,
     private _inventarioService: InventarioService,
   ) {
     this.page_title = "Mantenimiento";
@@ -61,9 +72,14 @@ export class DisponibilidadComponent implements OnInit {
     console.log(this.articuloDevolver)
     this._inventarioService.habilitar(this.articuloDevolver).subscribe(
       response => {
-        form.reset();
-        this.articuloDevolver = new Disponible(null,null,null,'DISPONIBLE',null,null,null,null);
-        this.getArticulosDevueltos();
+        if(response.code == 200){
+          form.reset();
+          this.articuloDevolver = new Disponible(null,null,null,'DISPONIBLE',null,null,null,null);
+          this.getArticulosDevueltos();
+          this._service.success('Exito', response.message);
+        }else{
+          this._service.success('Exito', response.message);
+        }
       },
       error => {
         console.log(error);

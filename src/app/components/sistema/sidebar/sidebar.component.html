@@ -10,6 +10,11 @@
       </a>
     </li>
     <li *ngIf="getCajera() || getAdmin()">
+      <a [routerLink]="['/clientes']">
+        <i class="fas fa-arrow-circle-right" aria-hidden="true"></i> Clientes
+      </a>
+    </li>
+    <li *ngIf="getCajera() || getAdmin()">
       <a [routerLink]="['/devolucion']">
         <i class="fas fa-arrow-circle-right" aria-hidden="true"></i> Devoluciones
       </a>

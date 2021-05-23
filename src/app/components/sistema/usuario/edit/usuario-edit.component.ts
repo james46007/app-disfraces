@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NotificationsService } from 'angular2-notifications';
 import { User } from 'src/app/models/user';
 import { UserService } from 'src/app/services/user.service';
 
@@ -14,15 +15,23 @@ export class UsuarioEditComponent implements OnInit {
   public seleccionItems: string[];
   public page_title: string;
   public user: User;
-  public status: string;
   public roles: [];
   public token;
   public identity;
   public userId;
-  public message;
+
+  public options = {
+    position: ['top', 'right'],
+    timeOut: 5000,
+    showProgressBar: true,
+    pauseOnHover: false,
+    clickToClose: false,
+    maxLength: 10
+  }
 
   constructor(
     private _userService: UserService,
+    private _service: NotificationsService,
     private _route: ActivatedRoute,
     private _router: Router,
   ) { 
@@ -46,24 +55,18 @@ export class UsuarioEditComponent implements OnInit {
     this.user.surname.toUpperCase();
     this._userService.update(this.token, this.user).subscribe(
       response => {
-        
-        if (response && response.status == 'success') {
-          this.status = 'success';
+        if(response.code == 200){
           if(this.identity.sub == this.userId){
             this.identity = this.user;
             localStorage.setItem('identity', JSON.stringify(this.identity));
           }          
-          console.log(response)
           this._router.navigate(['usuarios']);
-        } else {
-          this.status = 'error';
-          this.message = response.message;
-          console.log(response)
+          this._service.success('Éxito', response.message);
+        }else{
+          this._service.alert('Alerta', response.message);
         }
-
       },
       error => {
-        this.status = 'error';
         console.log(<any>error);
       }
     );

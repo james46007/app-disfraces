@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { DisfrazService } from 'src/app/services/disfraz.service';
 import { global } from 'src/app/services/global';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NotificationsService } from 'angular2-notifications';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-categorias-add',
@@ -13,20 +15,28 @@ export class CategoriasAddComponent implements OnInit {
 
   public page_title: string;
   public categorias: [];
-  public status: string;
-  public message: string;
   public url: string;
   public disfrazId;
   public categoriasTotal: [];
   public categoriaID;
 
+  public options = {
+    position: ['top', 'right'],
+    timeOut: 5000,
+    showProgressBar: true,
+    pauseOnHover: false,
+    clickToClose: false,
+    maxLength: 10
+  }
+
   constructor(
+    private _userService: UserService,
+    private _service: NotificationsService,
     private _disfrazService: DisfrazService,
     private _route: ActivatedRoute,
   ) { 
     this.page_title = 'Disfraz Categorias';
     // this.categorias = new Category(0,'');
-    this.message = '';
     this.url = global.url;
   }
 
@@ -39,18 +49,18 @@ export class CategoriasAddComponent implements OnInit {
   }
 
   agregarCategoria(){
-    // console.log(this.categoriaID)
+    if(this.categoriaID === undefined){
+      this._service.alert('Alerta', 'Seleccione una categoria.');
+      return;
+    }
     this._disfrazService.addCategoria(this.disfrazId,this.categoriaID).subscribe(
       response => {
-        // console.log(response)
-        if(response.status == 'success'){          
-          // this.categoriasTotal = response;
+        if(response.code == 200){
+          this._service.success('Éxito', response.message);
           this.CategoriaDisfraz();
-          this.status = response.status;
         }else{
-          this.status = response.status;          
+          this._service.alert('Alerta', response.message);
         }
-        this.message = response.message;
       },
       error => {
         console.log(error);
@@ -91,9 +101,12 @@ export class CategoriasAddComponent implements OnInit {
   deleteCategoriaDisfraz(id){
     this._disfrazService.deleteCategoriaDisfraz(this.disfrazId,id).subscribe(
       response => {
-        // this.roles = response;
-        this.CategoriaDisfraz();
-        // console.log(response);
+        if(response.code == 200){
+          this._service.success('Éxito', response.message);
+          this.CategoriaDisfraz();
+        }else{
+          this._service.alert('Alerta', response.message);
+        }
       },
       error => {
         console.log(error);
