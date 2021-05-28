@@ -206,6 +206,12 @@ export class AlquilerComponent implements OnInit {
 
 
   pagar(form) {
+
+    if(this.listaAlquiler.length <= 0){
+      this._service.alert('Alerta','Agrege articulos a la listar de alquiler.')
+      return
+    }
+
     this.factura.customer_id = this.cliente.id;
     let hoy = new Date();
     let fecha = hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getDate();

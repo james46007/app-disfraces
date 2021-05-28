@@ -40,7 +40,7 @@ export class DisponibilidadComponent implements OnInit {
     this._inventarioService.articulosDevueltos().subscribe(
       response => {
         this.articulosDevueltos = response.articulos;
-        console.log(this.articulosDevueltos)
+        // console.log(this.articulosDevueltos)
       },
       error => {
         console.log(error)
@@ -69,7 +69,7 @@ export class DisponibilidadComponent implements OnInit {
   }
 
   habilitar(form){    
-    console.log(this.articuloDevolver)
+    // console.log(this.articuloDevolver)
     this._inventarioService.habilitar(this.articuloDevolver).subscribe(
       response => {
         if(response.code == 200){
