@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, OnDestroy, ViewChild  } from '@angular/core';
+import { DataTableDirective } from 'angular-datatables';
 import { NotificationsService } from 'angular2-notifications';
 import { Subject } from 'rxjs';
 import { InventarioService } from 'src/app/services/inventario.service';
@@ -9,7 +10,9 @@ import { InventarioService } from 'src/app/services/inventario.service';
   styleUrls: ['../usuario/usuarios/usuarios.component.css'],
   providers: [InventarioService]
 })
-export class ReporteClientesComponent implements OnInit {
+export class ReporteClientesComponent implements AfterViewInit, OnDestroy, OnInit {
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement: DataTableDirective;
 
   public page_title;
   public clientesAlquiler: [];
@@ -46,6 +49,23 @@ export class ReporteClientesComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  ngOnDestroy(): void {
+    this.dtTrigger.unsubscribe();
+  }
+
+  ngAfterViewInit(): void {
+    this.dtTrigger.next();
+  }
+
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      // Destroy the table first
+      dtInstance.destroy();
+      // Call the dtTrigger to rerender again
+      this.dtTrigger.next();
+    });
+  }
+
   onSubmit(form){
     console.log(this.desde.replace('-',''))
     this._inventarioService.getReporteClienteFechas(this.desde.replace('-','').replace('-',''),this.hasta.replace('-','').replace('-','')).subscribe(
@@ -53,6 +73,7 @@ export class ReporteClientesComponent implements OnInit {
         this.clientesAlquiler = response.data;
         if(response.code == 200){
           this._service.success('Exito', response.message);
+          this.rerender()
         }else{
           this._service.alert('Alerta', response.message);
         }

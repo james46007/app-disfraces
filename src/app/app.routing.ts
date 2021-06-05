@@ -41,6 +41,8 @@ import { NosotrosComponent } from './components/web/nosotros/nosotros.component'
 import { ContactoComponent } from './components/web/contacto/contacto.component';
 import { ClientesComponent } from './components/sistema/cliente/clientes/clientes.component';
 import { ClienteEditComponent } from './components/sistema/cliente/cliente-edit/cliente-edit.component';
+import { ImprimirComponent } from './components/sistema/imprimir/imprimir.component';
+import { ReporteArticulosComponent } from './components/sistema/reporte-articulos/reporte-articulos.component';
 
 
 //definir las rutas
@@ -77,6 +79,7 @@ const appRoutes: Routes = [
 
     // Reportes
     {path: 'reporte/clientes', component: ReporteClientesComponent, canActivate: [IdentityGuard,AdminGuard] },
+    {path: 'reporte/articulos', component: ReporteArticulosComponent, canActivate: [IdentityGuard,AdminGuard] },
     
     // alquiler
     {path: 'alquiler', component: AlquilerComponent, canActivate: [IdentityGuard,CajeraGuard] },
@@ -96,6 +99,9 @@ const appRoutes: Routes = [
     //Rutas de mover en pagina
     {path: 'nosotros', component: NosotrosComponent },
     {path: 'contacto', component: ContactoComponent },
+
+
+    {path: 'pdf', component: ImprimirComponent },
     
     { path: '**', component: PageNotFoundComponent },
 ];

@@ -108,6 +108,7 @@ export class ProductosComponent implements AfterViewInit, OnDestroy, OnInit {
           this.getMomvimientoInventario();
           form.resetForm();
           this._service.success('Exito', response.message);
+          console.log(response)
       },
       error => {
         console.log(error);

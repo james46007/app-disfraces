@@ -21,6 +21,8 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class AlquilerComponent implements OnInit {
 
+  public fechaActual = new Date().toLocaleDateString()
+
   public page_title: string;
   public articulosDisponibles: [];
   public cliente: Cliente;
@@ -90,7 +92,7 @@ export class AlquilerComponent implements OnInit {
   }
 
   onSubmit(form) {
-    if(this.validador){
+    if (this.validador) {
       this._clienteService.buscarCliente(this.cliente.identity_card).subscribe(
         response => {
           if (response.status == 'warning') {
@@ -112,7 +114,7 @@ export class AlquilerComponent implements OnInit {
           console.log(error);
         }
       );
-    }else{
+    } else {
       let cedula = this.cliente.identity_card
       this.cliente = new Cliente(null, '', '', cedula, '', '', '');
     }
@@ -137,15 +139,15 @@ export class AlquilerComponent implements OnInit {
     // }
     // Agregar articulos
     let encontrado = this.listaAlquiler.find(disfraz => disfraz.article_id == this.alquiler.article_id)
-    if(encontrado === undefined){
+    if (encontrado === undefined) {
       this.alquiler.total = this.alquiler.salida * this.alquiler.sal_val_uni;
       this.subTotal += this.alquiler.total;
       this.listaAlquiler.push(this.alquiler);
       this.alquiler = { id: this.listaAlquiler.length, article_id: null, name: null, code: null, date: null, description: 'ALQUILER', estado: 1, sal_val_uni: null, salida: null, total: null, maximo: null };
       this.maximoCantidad = null;
       this.total = (this.subTotal * this.iva) + this.subTotal;
-    }else{
-      this._service.alert('Alerta','Ya esta agregado el articulo a la lista.');
+    } else {
+      this._service.alert('Alerta', 'Ya esta agregado el articulo a la lista.');
     }
 
   }
@@ -207,75 +209,93 @@ export class AlquilerComponent implements OnInit {
 
   pagar(form) {
 
-    if(this.listaAlquiler.length <= 0){
-      this._service.alert('Alerta','Agrege articulos a la listar de alquiler.')
+    if (this.listaAlquiler.length <= 0) {
+      this._service.alert('Alerta', 'Agrege articulos a la listar de alquiler.')
       return
     }
 
-    this.factura.customer_id = this.cliente.id;
-    let hoy = new Date();
-    let fecha = hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getDate();
-    let hora = hoy.getHours() + ':' + hoy.getMinutes() + ':' + hoy.getSeconds();
-    let fechaYHora = fecha + ' ' + hora;
-    this.factura.date = fechaYHora;
-    if (this.factura.guarantee_id == 1) {
-      this.factura.garantia = "CÉDULA"
-    }
-    this.factura.discount = 0;
-    this.factura.subtotal = this.subTotal;
-    this.factura.iva = this.iva;
-    this.factura.total = this.total;
+    this._inventarioService.getVerificarArticulosDisponibles(this.listaAlquiler).subscribe(
+      response => {
+        console.log(response)
+        if (response.code == 100) {
+          for (let index = 0; index < response.message.length; index++) {
+            this._service.alert('Alerta', response.message[index])  
+          }
+        } else {
+          this.factura.customer_id = this.cliente.id;
+          let hoy = new Date();
+          let fecha = hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getDate();
+          let hora = hoy.getHours() + ':' + hoy.getMinutes() + ':' + hoy.getSeconds();
+          let fechaYHora = fecha + ' ' + hora;
+          this.factura.date = fechaYHora;
+          if (this.factura.guarantee_id == 1) {
+            this.factura.garantia = "CÉDULA"
+          }
+          this.factura.discount = 0;
+          this.factura.subtotal = this.subTotal;
+          this.factura.iva = this.iva;
+          this.factura.total = this.total;
 
-    // console.log(this.factura)
+          // console.log(this.factura)
 
-    if (this.factura.customer_id == null) {
-      this._clienteService.register(this.cliente, this._userService.getToken()).subscribe(
-        response => {
-          this.factura.customer_id = response.cliente.id;
-          this._inventarioService.registrarFactura(this.factura).subscribe(
-            response => {
-              for (let i = 0; i < this.listaAlquiler.length; i++) {
-                this._inventarioService.registrarAlquiler(this.listaAlquiler[i], response.factura.id).subscribe(
+          if (this.factura.customer_id == null) {
+            this._clienteService.register(this.cliente, this._userService.getToken()).subscribe(
+              response => {
+                this.factura.customer_id = response.cliente.id;
+                this._inventarioService.registrarFactura(this.factura).subscribe(
                   response => {
-                    // console.log('felicidades guapo');
+                    for (let i = 0; i < this.listaAlquiler.length; i++) {
+                      this._inventarioService.registrarAlquiler(this.listaAlquiler[i], response.factura.id).subscribe(
+                        response => {
+                          // console.log('felicidades guapo');                          
+                        },
+                        error => {
+                          console.log(error);
+                        }
+                      );
+                    }
+                    this.resetear();
                   },
                   error => {
                     console.log(error);
                   }
                 );
+              },
+              error => {
+                console.log(error);
               }
-              this.resetear();
-            },
-            error => {
-              console.log(error);
-            }
-          );
-        },
-        error => {
-          console.log(error);
-        }
-      );
-    } else {
-      console.log(this.listaAlquiler)
-      this._inventarioService.registrarFactura(this.factura).subscribe(
-        response => {
-          for (let i = 0; i < this.listaAlquiler.length; i++) {
-            this._inventarioService.registrarAlquiler(this.listaAlquiler[i], response.factura.id).subscribe(
+            );
+          } else {
+            console.log(this.listaAlquiler)
+            this._inventarioService.registrarFactura(this.factura).subscribe(
               response => {
-                // console.log('felicidades guapo');
+                for (let i = 0; i < this.listaAlquiler.length; i++) {
+                  this._inventarioService.registrarAlquiler(this.listaAlquiler[i], response.factura.id).subscribe(
+                    response => {
+                      // console.log('felicidades guapo');
+                    },
+                    error => {
+                      console.log(error);
+                    }
+                  );
+                }
+                this.resetear();
               },
               error => {
                 console.log(error);
               }
             );
           }
-          this.resetear();
-        },
-        error => {
-          console.log(error);
+          this._service.success('Exito', 'Se guardo correctamente');
+          this.printer();
         }
-      );
-    }
+      },
+      error => {
+
+      }
+    );
+
+
 
   }
 
@@ -335,6 +355,8 @@ export class AlquilerComponent implements OnInit {
     this.alquiler = new Alquiler(null, null, null, null, null, 'ALQUILER', null, null, null, 1, null);
     this.factura = new Factura(null, null, null, null, null, null, null, null, null, 1);
     this.listaAlquiler = [];
+    this.subTotal = 0;
+    this.total = 0;
   }
 
   // verificar despues
@@ -351,6 +373,16 @@ export class AlquilerComponent implements OnInit {
     // doc.addImage(img,'PNG',7, 20, 195, 105);
     doc.save('postres.pdf');
     // });
+  }
+
+  printer() {
+    const printContent = document.getElementById("print");
+    const WindowPrt = window.open('', '', 'left=0,top=50,width=900,height=900,toolbar=0,scrollbars=0,status=0');
+    WindowPrt.document.write(printContent.innerHTML);
+    WindowPrt.document.close();
+    WindowPrt.focus();
+    WindowPrt.print();
+    WindowPrt.close();
   }
 
 }

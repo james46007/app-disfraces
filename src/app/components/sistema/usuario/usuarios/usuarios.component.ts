@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, OnDestroy, ViewChild  } from '@angular/core';
+import { DataTableDirective } from 'angular-datatables';
+import { Subject } from 'rxjs';
 import { NotificationsService } from 'angular2-notifications';
 import { UserService } from 'src/app/services/user.service';
 
@@ -8,7 +10,12 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./usuarios.component.css'],
   providers: [ UserService]
 })
-export class UsuariosComponent implements OnInit {
+export class UsuariosComponent implements AfterViewInit, OnDestroy, OnInit {
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement: DataTableDirective;
+
+  public dtOptions: DataTables.Settings = {};
+  public dtTrigger = new Subject();
 
   public title: string;
   public usuarios;
@@ -28,6 +35,14 @@ export class UsuariosComponent implements OnInit {
     private _service: NotificationsService,
   ) { 
     this.title = 'Usuarios';
+    this.dtOptions = {
+      searching: true,
+      pagingType: 'full_numbers',
+      pageLength: 5,
+      language: {
+        url: '//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json'
+      },
+    };
   }
 
   ngOnInit(): void {
@@ -35,11 +50,29 @@ export class UsuariosComponent implements OnInit {
     this.getRoles();
   }
 
+  ngOnDestroy(): void {
+    this.dtTrigger.unsubscribe();
+  }
+
+  ngAfterViewInit(): void {
+    this.dtTrigger.next();
+  }
+
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      // Destroy the table first
+      dtInstance.destroy();
+      // Call the dtTrigger to rerender again
+      this.dtTrigger.next();
+    });
+  }
+
   getUsuarios(){
     this._userService.getUsuarios().subscribe(
       response => {
         // if(response.status == 'success'){          
           this.usuarios = response;
+          this.rerender()
         // }
       },
       error => {

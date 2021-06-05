@@ -146,8 +146,10 @@ export class DevolucionComponent implements OnInit {
             this._service.success('Exito', response.message);
             this.cliente = response.cliente;
             this.factura.customer_id = response.cliente.id
+            this.factura.guarantee_id = response.alquiler[0].guarantee_id
             this.listaAlquiler = response.alquiler;
             this.garantia = response.garantia;
+            console.log(response)
           } else {
             this._service.alert('Alerta', response.message);
             let cedula = this.cliente.identity_card;
@@ -155,6 +157,7 @@ export class DevolucionComponent implements OnInit {
             this.factura = new Factura(null, null, null, null, "VENTA", 0, null, null, null, 1);
             this.listaAlquiler = [];
             this.garantia = null;
+            this.getIva()
           }
 
           // console.log(this.listaAlquiler);

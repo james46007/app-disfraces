@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, OnDestroy, ViewChild  } from '@angular/core';
+import { DataTableDirective } from 'angular-datatables';
+import { Subject } from 'rxjs';
 import { NotificationsService } from 'angular2-notifications';
 import { DisfrazService } from 'src/app/services/disfraz.service';
 import { UserService } from 'src/app/services/user.service';
@@ -10,7 +12,12 @@ import { global } from '../../../../services/global';
   styleUrls: ['./disfraces.component.css'],
   providers: [DisfrazService]
 })
-export class DisfracesComponent implements OnInit {
+export class DisfracesComponent implements AfterViewInit, OnDestroy, OnInit {
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement: DataTableDirective;
+
+  public dtOptions: DataTables.Settings = {};
+  public dtTrigger = new Subject();
 
   public page_title: string;
   public disfraces: [];
@@ -36,18 +43,44 @@ export class DisfracesComponent implements OnInit {
     // this.categorias = new Category(0,'');
     this.message = '';
     this.url = global.url;
+    this.dtOptions = {
+      searching: true,
+      pagingType: 'full_numbers',
+      pageLength: 5,
+      language: {
+        url: '//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json'
+      },
+    };
   }
 
   ngOnInit(): void {
     this.getDisfraces();
   }
 
+  ngOnDestroy(): void {
+    this.dtTrigger.unsubscribe();
+  }
+
+  ngAfterViewInit(): void {
+    this.dtTrigger.next();
+  }
+
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      // Destroy the table first
+      dtInstance.destroy();
+      // Call the dtTrigger to rerender again
+      this.dtTrigger.next();
+    });
+  }
+
   getDisfraces(){
     this._disfrazService.getDisfraces().subscribe(
       response => {
         // if(response.status == 'success'){    
-          console.log(response.total)      
+          // console.log(response.total)      
           this.disfraces = response;
+          this.rerender()
         // }
       },
       error => {

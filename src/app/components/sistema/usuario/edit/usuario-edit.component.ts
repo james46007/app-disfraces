@@ -53,6 +53,7 @@ export class UsuarioEditComponent implements OnInit {
   onSubmit(form) {
     this.user.name.toUpperCase();
     this.user.surname.toUpperCase();
+    console.log(this.user)
     this._userService.update(this.token, this.user).subscribe(
       response => {
         if(response.code == 200){

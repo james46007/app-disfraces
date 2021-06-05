@@ -32,7 +32,7 @@ export class DisfrazRegisterComponent implements OnInit {
   public afuConfig = {
     multiple: false,
     formatsAllowed: ".jpg, .png, .gif, .jpeg",
-    maxSize: "50",
+    maxSize: "150",
     uploadAPI: {
       url: global.url + 'subir/foto/disfraz',
 

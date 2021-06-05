@@ -179,7 +179,110 @@
 
         <input type="submit" value="Finalizar" class="btn btn-primary" [disabled]="facturarArticulosForm.invalid">
       </form>
-
+      <div id="print" class="container" class="d-none" style="visibility: hidden;">
+        <div class="card">
+      <div class="card-header">
+      Fecha:
+      <strong>{{fechaActual}}</strong> 
+        <!-- <span class="float-right"> <strong>Status:</strong> Pending</span> -->
+      
+      </div>
+      <div class="card-body">
+      <div class="row mb-4">
+      <div class="col-sm-6">
+      <h6 class="mb-3">
+        Información de la empresa:</h6>
+      <div>
+      <strong>LA CASA DEL DISFRAZ EL MUNDO Y SU FOLKLOR</strong>
+      </div>
+      <div>Dirección: RÍo Tuhuando 153 Y YasunÍ</div>
+      <div>Ciudad: Ibarra, Imbabura. Ecuador</div>
+      <div>Email: info@webz.com.pl</div>
+      <div>Teléfono: (06) 260-0549 - 0997811654</div>
+      </div>
+      
+      <div class="col-sm-6">
+      <h6 class="mb-3">Información del cliente:</h6>
+      <div>
+      <strong>{{cliente.name}} {{cliente.surname}}</strong>
+      </div>
+      <div>Dirección: {{cliente.direction}}</div>
+      <div>Email: {{cliente.email}}</div>
+      <div>Teléfono: {{cliente.cellphone}}</div>
+      </div>
+      
+      
+      
+      </div>
+      
+      <div class="table-responsive-sm">
+      <table class="table table-striped">
+      <thead>
+      <tr>
+      <th class="center">#</th>
+      <th scope="col">Nombre</th>
+      <th scope="col">Codigo</th>
+      <th scope="col">Cantidad</th>
+      <th scope="col">Valor unitario</th>
+      <th scope="col">Valor total</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let articulo of listaAlquiler; let i = index">
+            <th scope="row">{{i+1}}</th>
+            <td>{{articulo.name}}</td>
+            <td>{{articulo.code}}</td>
+            <td>{{articulo.salida}}</td>
+            <td>{{articulo.sal_val_uni}}</td>
+            <td>{{articulo.total}}</td>
+      </tr>
+      </tbody>
+      </table>
+      </div>
+      <div class="row">
+      <div class="col-lg-4 col-sm-5">
+      
+      </div>
+      
+      <div class="col-lg-4 col-sm-5 ml-auto">
+      <table class="table table-clear">
+      <tbody>
+      <tr>
+      <td class="left">
+      <strong>Subtotal</strong>
+      </td>
+      <td class="right">${{subTotal}}</td>
+      </tr>
+      <!-- <tr>
+      <td class="left">
+      <strong>Discount (20%)</strong>
+      </td>
+      <td class="right">$1,699,40</td>
+      </tr> -->
+      <tr>
+      <td class="left">
+       <strong>IVA {{setIva}}%</strong>
+      </td>
+      <td class="right">${{iva*subTotal | number : '1.2-2'}}</td>
+      </tr>
+      <tr>
+      <td class="left">
+      <strong>Total</strong>
+      </td>
+      <td class="right">
+      <strong>${{total}}</strong>
+      </td>
+      </tr>
+      </tbody>
+      </table>
+      
+      </div>
+      
+      </div>
+      
+      </div>
+      </div>
+      </div>
     </form>
   </div>
 </div>

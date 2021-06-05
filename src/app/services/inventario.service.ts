@@ -29,6 +29,13 @@ export class InventarioService {
     let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this._http.get(this.url + 'articulo/disponible/' + id, { headers: headers });
   }
+  
+  getVerificarArticulosDisponibles(alquiler): Observable<any> {
+    let json = JSON.stringify(alquiler);
+    let params = 'json=' + json;
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this._http.post(this.url + 'verificar/articulos/disponibles/', params, { headers: headers });
+  }
 
   registrarAlquiler(alquiler, clienteID): Observable<any> {
     let json = JSON.stringify(alquiler);
@@ -200,6 +207,16 @@ export class InventarioService {
   getReporteClienteFechas(desde, hasta): Observable<any> {
     let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this._http.get(this.url + 'reportes/clientes/' + desde + '/' + hasta, { headers: headers });
+  }
+
+  getReporteArticulosFechas(desde, hasta): Observable<any> {
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this._http.get(this.url + 'reportes/articulos/' + desde + '/' + hasta, { headers: headers });
+  }
+
+  getReporteArticuloFechas(desde, hasta, articulo_id): Observable<any> {
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this._http.get(this.url + 'reportes/articulo/' + desde + '/' + hasta + '/' + articulo_id, { headers: headers });
   }
 
   // IVA

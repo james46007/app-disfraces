@@ -57,6 +57,9 @@ import { ReporteClientesComponent } from './components/sistema/reporte-clientes/
 import { IvaListComponent } from './components/sistema/iva/iva-list/iva-list.component';
 import { ClientesComponent } from './components/sistema/cliente/clientes/clientes.component';
 import { ClienteEditComponent } from './components/sistema/cliente/cliente-edit/cliente-edit.component';
+import { ImprimirComponent } from './components/sistema/imprimir/imprimir.component';
+import { NgxPrintModule } from 'ngx-print';
+import { ReporteArticulosComponent } from './components/sistema/reporte-articulos/reporte-articulos.component';
 
 @NgModule({
   declarations: [
@@ -100,7 +103,9 @@ import { ClienteEditComponent } from './components/sistema/cliente/cliente-edit/
     ReporteClientesComponent,
     IvaListComponent,
     ClientesComponent,
-    ClienteEditComponent
+    ClienteEditComponent,
+    ImprimirComponent,
+    ReporteArticulosComponent
   ],
   imports: [
     BrowserModule,
@@ -110,7 +115,8 @@ import { ClienteEditComponent } from './components/sistema/cliente/cliente-edit/
     AngularFileUploaderModule,
     DataTablesModule,
     BrowserAnimationsModule,
-    SimpleNotificationsModule.forRoot()
+    SimpleNotificationsModule.forRoot(),
+    NgxPrintModule
   ],
   providers: [
     appRoutingProviders,

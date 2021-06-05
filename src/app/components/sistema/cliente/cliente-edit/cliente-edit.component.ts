@@ -59,22 +59,65 @@ export class ClienteEditComponent implements OnInit {
   }
 
   onSubmit(form){
-    let token = this._userService.getToken();
-    this._clienteService.updateCliente(this.cliente, token).subscribe(
-      response => {
-        // console.log(response)
-        if(response.code == 200){
-          this._service.success('Éxito', response.message);     
-          this._router.navigate(['clientes']);
-        }else{
-          // this.message = response.message;
-          this._service.alert('Alerta', response.message);          
+    this.validadorDeCedula(this.cliente.identity_card);
+    if(this.validador){
+      let token = this._userService.getToken();
+      this._clienteService.updateCliente(this.cliente, token).subscribe(
+        response => {
+          // console.log(response)
+          if(response.code == 200){
+            this._service.success('Éxito', response.message);     
+            this._router.navigate(['clientes']);
+          }else{
+            // this.message = response.message;
+            this._service.alert('Alerta', response.message);          
+          }
+        },
+        error => {
+          console.log(error);        
         }
-      },
-      error => {
-        console.log(error);        
+      );
+    }
+  }
+
+  public validador = true;
+  validadorDeCedula(cedula: String) {
+    let cedulaCorrecta = false;
+    if (cedula.length == 10) {
+      let tercerDigito = parseInt(cedula.substring(2, 3));
+      if (tercerDigito < 6) {
+        // El ultimo digito se lo considera dígito verificador
+        let coefValCedula = [2, 1, 2, 1, 2, 1, 2, 1, 2];
+        let verificador = parseInt(cedula.substring(9, 10));
+        let suma: number = 0;
+        let digito: number = 0;
+        for (let i = 0; i < (cedula.length - 1); i++) {
+          digito = parseInt(cedula.substring(i, i + 1)) * coefValCedula[i];
+          suma += ((parseInt((digito % 10) + '') + (parseInt((digito / 10) + ''))));
+          //      console.log(suma+" suma"+coefValCedula[i]); 
+        }
+        suma = Math.round(suma);
+        //  console.log(verificador);
+        //  console.log(suma);
+        //  console.log(digito);
+        if ((Math.round(suma % 10) == 0) && (Math.round(suma % 10) == verificador)) {
+          cedulaCorrecta = true;
+        } else if ((10 - (Math.round(suma % 10))) == verificador) {
+          cedulaCorrecta = true;
+        } else {
+          cedulaCorrecta = false;
+        }
+      } else {
+        cedulaCorrecta = false;
       }
-    );
+    } else {
+      cedulaCorrecta = false;
+    }
+    this.validador = cedulaCorrecta;
+    if (!cedulaCorrecta) {
+      this._service.alert('Alerta', 'Cedula incorrecta');
+    }
+
   }
 
 }

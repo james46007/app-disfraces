@@ -36,6 +36,7 @@
     "jspdf": "^1.5.3",
     "moment": "^2.29.1",
     "ng5-slider": "^1.2.6",
+    "ngx-print": "^1.2.1",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "venus-custom-validators": "^10.0.4",

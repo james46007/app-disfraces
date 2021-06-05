@@ -85,7 +85,7 @@ export class ProbadorComponent implements OnInit {
   infoDisfraz(id){
     this._disfrazService.getDisfraz(id).subscribe(
       response => {
-        this.disfraz = response.disfraz[0];
+        this.disfraz = response.data;
         // console.log(this.disfraz)
         
       
