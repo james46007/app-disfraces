@@ -21,6 +21,9 @@ export class ReporteClientesComponent implements AfterViewInit, OnDestroy, OnIni
   public dtOptions: DataTables.Settings = {};
   public dtTrigger = new Subject();
 
+  public fechaMaxima = new Date().getFullYear().toString() + "-" + ("0" + (new Date().getMonth() + 1)).slice(-2).toString() + "-" + ("0" + (new Date().getDate())).slice(-2).toString();
+  public fechaActual = new Date().getFullYear().toString() + "-" + ("0" + (new Date().getMonth() + 1)).slice(-2).toString() + "-" + ("0" + (new Date().getDate())).slice(-2).toString();
+
   public options = {
     position: ['top', 'right'],
     timeOut: 5000,
@@ -82,6 +85,10 @@ export class ReporteClientesComponent implements AfterViewInit, OnDestroy, OnIni
         console.log(error);
       }
     );
+  }
+
+  limiteFecha(){
+    this.fechaMaxima = this.hasta;
   }
 
 }

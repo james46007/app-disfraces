@@ -34,7 +34,7 @@ export class InventarioService {
     let json = JSON.stringify(alquiler);
     let params = 'json=' + json;
     let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    return this._http.post(this.url + 'verificar/articulos/disponibles/', params, { headers: headers });
+    return this._http.post(this.url + 'verificar/articles/available/', params, { headers: headers });
   }
 
   registrarAlquiler(alquiler, clienteID): Observable<any> {

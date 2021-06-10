@@ -25,6 +25,9 @@ export class ReporteArticulosComponent implements AfterViewInit, OnDestroy, OnIn
   public dtOptions: DataTables.Settings = {};
   public dtTrigger = new Subject();
 
+  public fechaMaxima = new Date().getFullYear().toString() + "-" + ("0" + (new Date().getMonth() + 1)).slice(-2).toString() + "-" + ("0" + (new Date().getDate())).slice(-2).toString();
+  public fechaActual = new Date().getFullYear().toString() + "-" + ("0" + (new Date().getMonth() + 1)).slice(-2).toString() + "-" + ("0" + (new Date().getDate())).slice(-2).toString();
+
   public options = {
     position: ['top', 'right'],
     timeOut: 5000,
@@ -92,12 +95,14 @@ export class ReporteArticulosComponent implements AfterViewInit, OnDestroy, OnIn
     if(this.seleccionado == 0){
       this._inventarioService.getReporteArticulosFechas(this.desde.replace('-','').replace('-',''),this.hasta.replace('-','').replace('-','')).subscribe(
         response => {
-          console.log(response)
-          this.articulosAlquiler = response.data;
+          // console.log(response)          
           if(response.code == 200){
+            this.articulosAlquiler = []
+            this.articulosAlquiler = response.data;
             this._service.success('Exito', response.message);
             this.rerender()
           }else{
+            this.articulosAlquiler = []
             this._service.alert('Alerta', response.message);
           }
         },
@@ -108,12 +113,14 @@ export class ReporteArticulosComponent implements AfterViewInit, OnDestroy, OnIn
     }else{
       this._inventarioService.getReporteArticuloFechas(this.desde.replace('-','').replace('-',''),this.hasta.replace('-','').replace('-',''), this.seleccionado).subscribe(
         response => {
-          console.log(response)
-          this.articulosAlquiler = response.data;
+          // console.log(response)
           if(response.code == 200){
+            this.articulosAlquiler = []
+            this.articulosAlquiler = response.data;
             this._service.success('Exito', response.message);
             this.rerender()
           }else{
+            this.articulosAlquiler = []
             this._service.alert('Alerta', response.message);
           }
         },
@@ -123,4 +130,9 @@ export class ReporteArticulosComponent implements AfterViewInit, OnDestroy, OnIn
       );
     }
   }
+
+  limiteFecha(){
+    this.fechaMaxima = this.hasta;
+  }
+
 }

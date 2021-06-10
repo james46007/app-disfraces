@@ -106,23 +106,30 @@ export class ClientesComponent implements AfterViewInit, OnDestroy, OnInit {
 
   onSubmit(form) {
     this.validadorDeCedula(this.client.identity_card)
-    if(this.validador){
-      this._clienteService.register(this.client, this._userService.getToken()).subscribe(
-        response => {
-          if(response.code == 200){
-            form.reset();
-            this.getClientes();
-            this._service.success('Éxito', response.message);
-          }else{
-            this._service.alert('Alerta', response.message);
+    this._userService.validarEmail(this.client.email).subscribe(
+      response => {
+        if (response.mx_found && response.format_valid && response.smtp_check) {
+          if(this.validador){
+            this._clienteService.register(this.client, this._userService.getToken()).subscribe(
+              response => {
+                if(response.code == 200){
+                  form.reset();
+                  this.getClientes();
+                  this._service.success('Éxito', response.message);
+                }else{
+                  this._service.alert('Alerta', response.message);
+                }
+              },
+              error => {
+                console.log(<any>error);
+                this._service.error('Error', error.error.message);
+              }
+            );
           }
-        },
-        error => {
-          console.log(<any>error);
-          this._service.error('Error', error.error.message);
+        } else {
+          this._service.alert('alerta', 'Email no existe');
         }
-      );
-    }
+    });
   }
 
   public validador = false;

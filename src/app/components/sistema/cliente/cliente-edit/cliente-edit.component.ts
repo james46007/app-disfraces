@@ -60,24 +60,31 @@ export class ClienteEditComponent implements OnInit {
 
   onSubmit(form){
     this.validadorDeCedula(this.cliente.identity_card);
-    if(this.validador){
-      let token = this._userService.getToken();
-      this._clienteService.updateCliente(this.cliente, token).subscribe(
-        response => {
-          // console.log(response)
-          if(response.code == 200){
-            this._service.success('Éxito', response.message);     
-            this._router.navigate(['clientes']);
-          }else{
-            // this.message = response.message;
-            this._service.alert('Alerta', response.message);          
+    this._userService.validarEmail(this.cliente.email).subscribe(
+      response => {
+        if (response.mx_found && response.format_valid && response.smtp_check) {
+          if(this.validador){
+            let token = this._userService.getToken();
+            this._clienteService.updateCliente(this.cliente, token).subscribe(
+              response => {
+                // console.log(response)
+                if(response.code == 200){
+                  this._service.success('Éxito', response.message);     
+                  this._router.navigate(['clientes']);
+                }else{
+                  // this.message = response.message;
+                  this._service.alert('Alerta', response.message);          
+                }
+              },
+              error => {
+                console.log(error);        
+              }
+            );
           }
-        },
-        error => {
-          console.log(error);        
+        } else {
+          this._service.alert('alerta', 'Email no existe');
         }
-      );
-    }
+      });    
   }
 
   public validador = true;

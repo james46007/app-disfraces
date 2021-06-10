@@ -101,6 +101,16 @@ export class ProductosComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   registrarProducto(form){
+    if(this.nuevoProducto.entrada == 0){
+      this._service.alert('Alerta', "La cantidad no puede ser menor a cero");
+      return
+    }
+
+    if(this.nuevoProducto.ent_val_uni == 0){
+      this._service.alert('Alerta', "La precio no puede ser menor a cero");
+      return
+    }
+
     let hoy = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
     this.nuevoProducto.date = hoy;
     this._inventarioService.registrarProducto(this.nuevoProducto).subscribe(

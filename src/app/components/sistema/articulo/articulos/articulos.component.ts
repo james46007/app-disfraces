@@ -103,6 +103,11 @@ export class ArticulosComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   onSubmit(form){
+    if(this.articulo.price == 0){
+      this._service.alert('Alerta', "La precio no puede ser menor a cero");
+      return
+    }
+
     this._articuloService.register(this.articulo, this.token).subscribe(
       response => {        
         if(response.code == 200){

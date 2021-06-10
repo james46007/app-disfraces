@@ -16,7 +16,7 @@ import { InventarioService } from 'src/app/services/inventario.service';
 export class DevolucionComponent implements OnInit {
 
   public page_title: string;
-  public validador;
+  public validador = true;
   // public devolucion: Devolucion;
   public listaAlquiler: Devolucion[];
   public garantia: string;
@@ -60,6 +60,24 @@ export class DevolucionComponent implements OnInit {
   }
 
   devolver() {
+    this.validadorDeCedula(this.cliente.identity_card)
+    if(!this.validador){
+      return
+    }
+
+    let valoresCero = false
+    Object.entries(this.listaAlquiler).forEach(([key, value]) => {
+      if(value.entrada < 0){
+        valoresCero = true
+      }
+    });
+
+    if(valoresCero){
+      this._service.alert('Alerta', 'No puede puede tener valores menores a 0 en la devolución.')
+      return
+    }
+    
+    this.devolverArticulo();
     let hoy = new Date();
     let fecha = hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getDate();
     let hora = hoy.getHours() + ':' + hoy.getMinutes() + ':' + hoy.getSeconds();
@@ -148,8 +166,11 @@ export class DevolucionComponent implements OnInit {
             this.factura.customer_id = response.cliente.id
             this.factura.guarantee_id = response.alquiler[0].guarantee_id
             this.listaAlquiler = response.alquiler;
+            Object.entries(this.listaAlquiler).forEach(([key, value]) => {
+              value.entrada = 0
+            });
             this.garantia = response.garantia;
-            console.log(response)
+            this.devolverArticulo();
           } else {
             this._service.alert('Alerta', response.message);
             let cedula = this.cliente.identity_card;
@@ -173,9 +194,13 @@ export class DevolucionComponent implements OnInit {
 
   }
 
-  devolverArticulo(indice, idArticulo) {
+  devolverArticulo() {
     this.factura.subtotal = 0;
     for (let index = 0; index < this.listaAlquiler.length; index++) {
+      if (this.listaAlquiler[index].entrada < 0) {
+        this._service.alert('Alerta', 'No puede ingresar numeros menores a cero');
+        return
+      }
       this.factura.subtotal += Math.round(((this.listaAlquiler[index].quantity - this.listaAlquiler[index].entrada) * this.listaAlquiler[index].exi_val_uni) * 100) / 100;
     }
     if (this.factura.subtotal != 0) {
@@ -213,6 +238,7 @@ export class DevolucionComponent implements OnInit {
     let fechaYHora = fecha + ' ' + hora;
     this.factura.date = fechaYHora;
     this.garantia = '';
+    this.getIva();
   }
 
 
@@ -249,7 +275,9 @@ export class DevolucionComponent implements OnInit {
       cedulaCorrecta = false;
     }
     this.validador = cedulaCorrecta;
-
+    if (!cedulaCorrecta) {
+      this._service.alert('Alerta', 'Cedula incorrecta');
+    }
   }
 
 }

@@ -38,13 +38,13 @@
                   </div>
                   <div class="form-group">
                     <label for="entrada">Cantidad del producto</label>
-                    <input type="number" min="0" class="form-control" name="entrada" placeholder="Cantidad" #entrada="ngModel"
+                    <input type="number" pattern="^[0-9]+" min="1" class="form-control" name="entrada" placeholder="Cantidad" #entrada="ngModel"
                       [(ngModel)]="nuevoProducto.entrada" required>
                     <small *ngIf="!entrada.valid && entrada.touched" class="invalid-feedback d-block">Ingrese codigo</small>
                   </div>
                   <div class="form-group">
                     <label for="ent_val_uni">Precio del producto</label>
-                    <input type="number" min="0"  class="form-control" name="ent_val_uni" placeholder="Precio" #ent_val_uni="ngModel"
+                    <input type="number" pattern="^[0-9]+" min="1" class="form-control" name="ent_val_uni" placeholder="Precio" #ent_val_uni="ngModel"
                       [(ngModel)]="nuevoProducto.ent_val_uni" required>
                     <small *ngIf="!ent_val_uni.valid && ent_val_uni.touched" class="invalid-feedback d-block">Ingrese codigo</small>
                   </div>                  

@@ -46,15 +46,15 @@
                     <!-- Modal content-->
                     <div class="modal-content">
                       <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title">¿Estas seguro que quieres borrar?</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
                       </div>
                       <div class="modal-body">
-                        <p>Vas a borrar definitivamente al usuario {{disfraz.name}}</p>
+                        <p>Vas a quitar el disfraz {{disfraz.name}} del catalogo</p>
                       </div>
                       <div class="modal-footer">
                         <div (click)="deleteDisfraz(disfraz.id)" class="btn btn-danger" data-dismiss="modal">Borrar</div>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                       </div>
                     </div>
 

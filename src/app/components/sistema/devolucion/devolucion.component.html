@@ -55,8 +55,8 @@
             <td>{{articulo.articulo}}</td>
             <td>{{articulo.quantity}}</td>
             <td>
-              <input type="number" name="salida{{articulo.id}}" #salida="ngModel" [min]="0" [max]="articulo.quantity"
-                [(ngModel)]="articulo.entrada" (click)="devolverArticulo(i,articulo.id)">
+              <input type="number" name="salida{{articulo.id}}" #salida="ngModel" pattern="^[0-9]+" [min]="0" [max]="articulo.quantity"
+                [(ngModel)]="articulo.entrada" (change)="devolverArticulo()">
             </td>
 
           </tr>

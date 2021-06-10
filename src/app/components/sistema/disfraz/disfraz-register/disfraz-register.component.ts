@@ -35,6 +35,7 @@ export class DisfrazRegisterComponent implements OnInit {
     maxSize: "150",
     uploadAPI: {
       url: global.url + 'subir/foto/disfraz',
+      method:"POST",
 
     },
     theme: "attachPin",

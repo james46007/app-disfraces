@@ -51,26 +51,33 @@ export class UsuarioEditComponent implements OnInit {
   }
 
   onSubmit(form) {
-    this.user.name.toUpperCase();
-    this.user.surname.toUpperCase();
-    console.log(this.user)
-    this._userService.update(this.token, this.user).subscribe(
+    this._userService.validarEmail(this.user.email).subscribe(
       response => {
-        if(response.code == 200){
-          if(this.identity.sub == this.userId){
-            this.identity = this.user;
-            localStorage.setItem('identity', JSON.stringify(this.identity));
-          }          
-          this._router.navigate(['usuarios']);
-          this._service.success('Éxito', response.message);
-        }else{
-          this._service.alert('Alerta', response.message);
+        if (response.mx_found && response.format_valid && response.smtp_check) {
+          this.user.name = this.user.name.toUpperCase();
+          this.user.surname = this.user.surname.toUpperCase();
+          // console.log(this.user)
+          this._userService.update(this.token, this.user).subscribe(
+            response => {
+              if(response.code == 200){
+                if(this.identity.sub == this.userId){
+                  this.identity = this.user;
+                  localStorage.setItem('identity', JSON.stringify(this.identity));
+                }          
+                this._router.navigate(['usuarios']);
+                this._service.success('Éxito', response.message);
+              }else{
+                this._service.alert('Alerta', response.message);
+              }
+            },
+            error => {
+              console.log(<any>error);
+            }
+          );
+        } else {
+          this._service.alert('alerta', 'Email no existe');
         }
-      },
-      error => {
-        console.log(<any>error);
-      }
-    );
+    });
   }
 
   getRoles(){

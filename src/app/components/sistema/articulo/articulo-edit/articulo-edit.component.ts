@@ -60,6 +60,10 @@ export class ArticuloEditComponent implements OnInit {
   }
 
   onSubmit(form){
+    if(this.articulo.price == 0){
+      this._service.alert('Alerta', "La precio no puede ser menor a cero");
+      return
+    }
     this._articuloService.update(this.articulo, this._userService.getToken()).subscribe(
       response => {
         if(response.code == 200){

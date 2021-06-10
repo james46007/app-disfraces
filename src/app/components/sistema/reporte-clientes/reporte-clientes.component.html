@@ -17,6 +17,7 @@
               type="date"
               class="form-control"
               value="{{ desde }}"
+              max="{{fechaMaxima}}"
               name="desde"
               [(ngModel)]="desde"
               required
@@ -28,8 +29,10 @@
               type="date"
               class="form-control"
               min="{{ desde }}"
+              max="{{fechaActual}}"
               name="hasta"
               [(ngModel)]="hasta"
+              (ngModelChange)="limiteFecha()"
               required
             />
           </div>

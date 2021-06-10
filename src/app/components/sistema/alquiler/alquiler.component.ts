@@ -214,6 +214,23 @@ export class AlquilerComponent implements OnInit {
       return
     }
 
+    this.validadorDeCedula(this.cliente.identity_card)
+    if(!this.validador){
+      return
+    }
+
+    let valoresCero = false
+    Object.entries(this.listaAlquiler).forEach(([key, value]) => {
+      if(value.salida < 1 || value.sal_val_uni < 1){
+        valoresCero = true
+      }
+    });
+
+    if(valoresCero){
+      this._service.alert('Alerta', 'No puede puede tener valores menores a 1 en el pedido.')
+      return
+    }
+
     this._inventarioService.getVerificarArticulosDisponibles(this.listaAlquiler).subscribe(
       response => {
         console.log(response)
@@ -310,7 +327,7 @@ export class AlquilerComponent implements OnInit {
     );
   }
 
-  public validador;
+  public validador = true;
   validadorDeCedula(cedula: String) {
     let cedulaCorrecta = false;
     if (cedula.length == 10) {

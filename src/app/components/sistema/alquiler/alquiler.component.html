@@ -21,6 +21,7 @@
         <div class="form-group">
           <label for="salida">Cantidad disponible {{maximoCantidad}}</label>
           <input type="number" class="form-control" name="salida" placeholder="Cantidad" #salida="ngModel" [min]="1"
+          pattern="^[0-9]+" onkeypress="return event.charCode >= 8 && event.charCode <= 57"
             [max]="maximoCantidad" [(ngModel)]="alquiler.salida" required>
           <small *ngIf="!salida.valid && salida.touched" class="invalid-feedback d-block">Ingrese cantidad</small>
         </div>
@@ -54,9 +55,11 @@
             <!-- <td>{{articulo.salida}}</td> -->
             <!-- <td>{{articulo.sal_val_uni}}</td> -->
             <td><input type="number" name="salida{{articulo.id}}" #sal_val_uni="ngModel" [min]="1"
+              onkeypress="return event.charCode >= 8 && event.charCode <= 57"
                 [max]="articulo.maximo" (change)="aumentarCantidad(i,articulo.id)" [(ngModel)]="articulo.salida">
             </td>
-            <td><input type="number" name="sal_val_uni{{articulo.id}}" #sal_val_uni="ngModel" min="1"
+            <td><input type="text" class="form-control" name="sal_val_uni{{articulo.id}}" #sal_val_uni="ngModel" min="1"
+              onkeypress="return event.charCode >= 8 && event.charCode <= 57"
                 (change)="calcular(i,articulo.id)" [(ngModel)]="articulo.sal_val_uni">
             </td>
             <td>{{articulo.total}}</td>
@@ -113,9 +116,9 @@
           <label for="identity_card">Numero cédula</label>
           <!-- <input type="text" class="form-control" name="identity_card" placeholder="Cedula" #identity_card="ngModel"
             [(ngModel)]="cliente.identity_card" required> -->
-          <input type="text" value="" class="form-control" name="cliente.identity_card"
+          <input type="text" value="" class="form-control" name="cliente.identity_card" pattern="^[0-9]+"
             [(ngModel)]="cliente.identity_card" (change)="validadorDeCedula(cliente.identity_card)" maxlength="10">
-          <!-- <small *ngIf="!validador" class="text-danger">Cédula Invalida</small> -->
+          <small *ngIf="!validador" class="text-danger">Cédula Invalida</small>
         </div>
         <input type="submit" value="Buscar" class="btn btn-primary" [disabled]="buscarClienteForm.invalid">
       </form>
@@ -149,6 +152,7 @@
           <div class="col-6">
             <label for="cellphone">Telefono</label>
             <input type="number" class="form-control" name="cellphone" placeholder="Telefono" #cellphone="ngModel"
+            pattern="^[0-9]+" max="10"
               [(ngModel)]="cliente.cellphone" required>
             <small *ngIf="!cellphone.valid && cellphone.touched" class="invalid-feedback d-block">Ingrese telefono</small>
           </div>
@@ -173,6 +177,7 @@
         <div class="form-group" *ngIf="factura.guarantee_id == 2">
           <label for="garantia">Garantia</label>
           <input type="text" class="form-control" name="garantia" placeholder="Garantia" #garantia="ngModel"
+          pattern="^[0-9]+"
             [(ngModel)]="factura.garantia" required>
           <small *ngIf="!garantia.valid && garantia.touched" class="invalid-feedback d-block">Ingrese garantia</small>
         </div>

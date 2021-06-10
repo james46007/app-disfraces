@@ -21,7 +21,7 @@
         <div class="form-group">
           <label for="entrada">Cantidad devueltos {{articuloDevolver.maximo}}</label>
           <input type="number" class="form-control" name="entrada" placeholder="Cantidad" #entrada="ngModel" [min]="1"
-            [max]="articuloDevolver.maximo" [(ngModel)]="articuloDevolver.entrada" required>
+            [max]="articuloDevolver.maximo" pattern="^[0-9]+" [(ngModel)]="articuloDevolver.entrada" required>
           <small *ngIf="!entrada.valid && entrada.touched" class="invalid-feedback d-block">Ingrese cantidad</small>
         </div>
 

@@ -54,6 +54,10 @@ export class IvaListComponent implements OnInit {
       this._service.alert('Alerta', 'Ingrese un numero entero');
       return;
     }
+    if(this.newIva.iva == 0){
+      this._service.alert('Alerta', 'No puede ingrese cero');
+      return;
+    }
     this._inventarioService.setIva(this.newIva, this._userService.getToken()).subscribe(
       response => {
         if (response.code == 200) {
